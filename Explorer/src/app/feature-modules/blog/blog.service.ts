@@ -15,7 +15,7 @@ export class BlogService {
   constructor(private http: HttpClient) { }
 
   getBlogComment(): Observable<PagedResults<BlogComment>> {
-    return this.http.get<PagedResults<BlogComment>>(environment.apiHost + 'tourist/comment')
+    return this.http.get<PagedResults<BlogComment>>(environment.blogHost + 'comment')
   }
 
   deleteBlogComment(id: number): Observable<BlogComment> {
@@ -23,7 +23,7 @@ export class BlogService {
   }
 
   addBlogComment(comment: BlogComment): Observable<BlogComment> {
-    return this.http.post<BlogComment>(environment.apiHost + 'tourist/comment', comment);
+    return this.http.post<BlogComment>(environment.blogHost + 'comment', comment);
   }
 
   updateBlogComment(comment: BlogComment): Observable<BlogComment> {
@@ -81,7 +81,7 @@ export class BlogService {
     return this.http.get<Blog>(environment.blogHost + 'blog/byUser/' + id);
   }
   getCommentsByBlogId(id: string): Observable<PagedResults<BlogComment>> {
-    return this.http.get<PagedResults<BlogComment>>(environment.apiHost + 'tourist/comment/byBlog/' + id);
+    return this.http.get<PagedResults<BlogComment>>(environment.blogHost + 'comment/byBlog/' + id);
   }
 
   getSimilarBlogs(currentBlog: Blog): Observable<Blog[]> {
