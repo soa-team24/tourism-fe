@@ -30,35 +30,38 @@ export class BlogService {
     return this.http.put<BlogComment>(environment.apiHost + 'tourist/comment/' + comment.id, comment);
   }
 
+  getBlogs1(): Observable<Blog[]> {
+    return this.http.get<Blog[]>(environment.blogHost + 'blog')
+  }
   getBlogs(): Observable<PagedResults<Blog>> {
-    return this.http.get<PagedResults<Blog>>(environment.apiHost + 'tourist/blog')
+    return this.http.get<PagedResults<Blog>>(environment.blogHost + 'blog')
   }
 
   getBlogsByStatus(status: BlogStatus): Observable<PagedResults<Blog>> {
     return this.http.get<PagedResults<Blog>>(environment.apiHost + 'tourist/blog/byStatus/' + status)
   }
 
-  deleteBlog(id: number): Observable<Blog> {
-    return this.http.delete<Blog>(environment.apiHost + 'tourist/blog/' + id);
+  deleteBlog(id: string): Observable<Blog> {
+    return this.http.delete<Blog>(environment.blogHost + 'blog/' + id);
   }
 
-  getBlog(id: number): Observable<Blog> {
-    return this.http.get<Blog>(environment.apiHost + 'tourist/blog/' + id);
+  getBlog(id: string): Observable<Blog> {
+    return this.http.get<Blog>(environment.blogHost + 'blog/' + id);
   }
 
   addBlog(blog: Blog): Observable<Blog> {
-    return this.http.post<Blog>(environment.apiHost + 'tourist/blog', blog);
+    return this.http.post<Blog>(environment.blogHost + 'blog', blog);
   }
 
   updateBlog(blog: Blog): Observable<Blog> {
-    return this.http.put<Blog>(environment.apiHost + 'tourist/blog/' + blog.id, blog);
+    return this.http.put<Blog>(environment.blogHost + 'blog/' + blog.id, blog);
   }
 
   addRating(rating: Rating): Observable<any> {
     return this.http.put(environment.apiHost + 'tourist/blog/AddRating', rating);
   }
 
-  getRatingCount(id: number): Observable<any> {
+  getRatingCount(id: string): Observable<any> {
     return this.http.get<any>(`${environment.apiHost}tourist/blog/RatingCount?blogId=${id}`);
   }  
   
@@ -74,10 +77,10 @@ export class BlogService {
     return this.http.request(req);
   }
 
-  getBlogsByUserId(id: number): Observable<PagedResults<Blog>> {
-    return this.http.get<PagedResults<Blog>>(environment.apiHost + 'tourist/blog/byUser/' + id);
+  getBlogsByUserId(id: number): Observable<Blog> {
+    return this.http.get<Blog>(environment.blogHost + 'blog/byUser/' + id);
   }
-  getCommentsByBlogId(id: number): Observable<PagedResults<BlogComment>> {
+  getCommentsByBlogId(id: string): Observable<PagedResults<BlogComment>> {
     return this.http.get<PagedResults<BlogComment>>(environment.apiHost + 'tourist/comment/byBlog/' + id);
   }
 

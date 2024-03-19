@@ -31,7 +31,7 @@ export class BlogFormComponent {
   
   blogForm: FormGroup;
   BlogCategory = BlogCategory;
-  private blogId: number | null = null;
+  private blogId: string | null = null;
   private blogTourId: number | null = null;
   selectedCategory: BlogCategory;
   tourExecution: TourExecution | null;
@@ -47,17 +47,20 @@ export class BlogFormComponent {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       const tourId = params.get('tourId')
-      this.blogId = id ? +id : null;
+      this.blogId = id || null;
+
       this.blogTourId = tourId? +tourId : null;
       if (id) {
         this.shouldEdit = true;
-
-        this.service.getBlog(this.blogId || 0).subscribe((blog) => {
-          if (blog.image) {
-            this.currentFileUrl = blog.image;
-          }
-          
-        });
+        if (this.blogId !== null) {
+          this.service.getBlog(this.blogId).subscribe((blog) => {
+            if (blog.image) {
+              this.currentFileUrl = blog.image;
+            }
+            
+          });
+      }
+      
       }
   });
   }
@@ -69,9 +72,11 @@ export class BlogFormComponent {
     this.route.paramMap.subscribe((params) => {
       const blogId = params.get('id');
       if (blogId) {
-          this.blogId = +blogId; // Konvertujte string u broj
+        this.blogId = blogId || null;
+        // Konvertujte string u broj
           // Poziv servisa da dobijete podatke o blogu na osnovu ID-a
-          this.service.getBlog(this.blogId).subscribe((blog) => {
+          if (this.blogId !== null) {
+            this.service.getBlog(this.blogId).subscribe((blog) => {
               // Postavite vrednosti u formi za uređivanje
 
               this.blogForm.patchValue(blog);
@@ -79,6 +84,8 @@ export class BlogFormComponent {
                 this.currentFileUrl =  blog.image;
               }
           });
+          }
+          
       }
       if(this.blogTourId){
         const userId = this.authService.user$.value.id;
@@ -223,7 +230,7 @@ export class BlogFormComponent {
       const blog: Blog = {
         title: this.blogForm.value.title || "",
         description: this.blogForm.value.description || "",
-        creationTime: new Date('2023-10-22T10:30:00'),
+        creationTime: new Date(),
         username: username,
         status: BlogStatus.Published,
         userId: userId,
@@ -239,7 +246,7 @@ export class BlogFormComponent {
       const blog: Blog = {
         title: this.blogForm.value.title || "",
         description: this.blogForm.value.description || "",
-        creationTime: new Date('2023-10-22T10:30:00'),
+        creationTime: new Date(),
         username: username,
         status:  BlogStatus.Published,
         image: 'https://localhost:44333/Images/' + this.currentFile.name,
