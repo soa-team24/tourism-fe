@@ -44,7 +44,8 @@
                     <div class="thumbnail">
                       <img [src]="bl.image" alt="Image">
                      </div>
-                      <button class="action-button" color="accent" (click)="deleteBlog(bl.id || 0)" mat-icon-button>
+                     <button class="action-button" color="accent" (click)="bl.id !== undefined ? deleteBlog(bl.id) : null" mat-icon-button>
+
                         <mat-icon>delete</mat-icon>
                       </button>
                       <button class="action-button" color="primary" (click)="onEditClicked(bl)" mat-icon-button>

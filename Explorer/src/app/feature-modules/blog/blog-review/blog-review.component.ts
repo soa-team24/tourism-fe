@@ -27,7 +27,24 @@ export class BlogReviewComponent {
   }
 
 
+  
   getBlogs(): void {
+
+    /*
+    this.service.getBlogs1().subscribe({
+      next: (blogs: Blog[]) => {
+        this.blogs = blogs;
+        this.originalBlogs = [...blogs];
+        this.totalPages = Math.ceil(this.blogs.length / this.itemsPerPage); 
+        this.totalPageArray = Array.from({ length: this.totalPages }, (_, index) => index + 1);
+        this.updateBlogRows();
+      },
+      error: (error: any) => {
+        // Handle error if needed
+      }
+    });
+    */
+
     this.service.getBlogs().subscribe({
       next: (result: PagedResults<Blog>) => {
         this.blogs = result.results;

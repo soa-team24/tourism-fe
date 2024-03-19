@@ -75,7 +75,8 @@
           <div class="blog-details">
             <h3 class="similar-blog-title">{{ similarBlog.title }}</h3>
           </div>
-          <button class="read-more-button" (click)="onReadMoreClicked(similarBlog.id || 0)" >Read More</button>
+          <button class="read-more-button" (click)="similarBlog.id !== undefined ? onReadMoreClicked(similarBlog.id) : null">Read More</button>
+
         </div>
       </div>
     </div>

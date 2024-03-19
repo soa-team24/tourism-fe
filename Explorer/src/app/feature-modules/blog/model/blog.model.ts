@@ -26,7 +26,7 @@ export const BlogCategoryValues = Object.values(BlogCategory);
 
 
 export interface Blog {
-    id? : number;
+    id? : string;
     userId : number;
     username: string;
     title : string;

@@ -68,7 +68,7 @@ export class BlogManagemetComponent {
     this.router.navigate(['blog-form', blog.id]);
   }
   
-  deleteBlog(id: number): void {
+  deleteBlog(id: string): void {
     console.log(id)
     this.service.deleteBlog(id).subscribe({
       next: () => {

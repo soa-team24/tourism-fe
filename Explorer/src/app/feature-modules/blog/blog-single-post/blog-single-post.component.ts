@@ -25,7 +25,7 @@ import { ViewportScroller } from '@angular/common';
 export class BlogSinglePostComponent implements OnInit {
   blogPost: Blog;
   blogSinglePost: BlogSinglePostComponent;
-  blogId: number;
+  blogId: string;
   comments: BlogComment[] = [];
   rating: Rating;
   upvoted: boolean = false;
@@ -46,7 +46,7 @@ ngOnInit(): void {
   this.route.paramMap.subscribe((params) => {
     const blogId = params.get('id');
     if (blogId) {
-      this.blogId = +blogId;
+      this.blogId = blogId;
       this.blogService.getBlog(this.blogId).subscribe((data: Blog) => {
         this.blogPost = data;
        // this.getCommentsByBlogId(this.blogId);
@@ -78,7 +78,7 @@ ngOnInit(): void {
     }
   });
   }
-  async getCommentsByBlogId(blogId: number): Promise<void> {
+  async getCommentsByBlogId(blogId: string): Promise<void> {
     try {
       const result = await this.blogService.getCommentsByBlogId(blogId).toPromise();
   
@@ -193,7 +193,7 @@ ngOnInit(): void {
     })
   }
 
-  onReadMoreClicked(id: number){
+  onReadMoreClicked(id: string){
     this.router.navigate(['blog-single-post', id]).then(() => {
       // Scroll na vrh stranice nakon navigacije
       this.viewportScroller.scrollToPosition([0, 0]);

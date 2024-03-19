@@ -20,7 +20,7 @@ export class BlogCommentFormComponent {
   @Output() blogCommentUpdated = new EventEmitter<BlogComment | null>();
   @Input() blogComment: BlogComment;
   @Input() shouldEdit: boolean = false;
-  @Input() blogId :  number = -1;
+  @Input() blogId :  string = "";
   @Output() blogCommentAdded = new EventEmitter<BlogComment>();
 
   blogCommentForm = new FormGroup({
