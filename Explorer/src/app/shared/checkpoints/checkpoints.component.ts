@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
 import { CheckpointModalComponent } from '../checkpoint-modal/checkpoint-modal.component';
 import { MapService } from '../map/map.service';
+import { CheckpointGo } from 'src/app/feature-modules/tour-authoring/model/checkpointgo.model';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class CheckpointsComponent {
   private map: any;
   currentLatitude: number;
   currentLongitude: number;
-  checkpoints: Checkpoint[] = [];
+  checkpoints: CheckpointGo[] = [];
   addMarker: boolean = false;
   tourName: string;
   tourDescription: string;
@@ -215,7 +216,7 @@ private addLabelToPopupContent(categoryLabel: string, imageSrc: string, name: st
     dialogRef.componentInstance.saveClicked.subscribe((result: { name: string, description: string, image: string }) => {
       this.addMarker = false;
       if(result.name && result.description){
-      const newCheckpoint: Checkpoint = {
+      const newCheckpoint: CheckpointGo = {
         name: result.name,
         description: result.description,
         longitude: this.currentLongitude,
@@ -232,54 +233,45 @@ private addLabelToPopupContent(categoryLabel: string, imageSrc: string, name: st
   }
 
   createTour(): void {
-    const checkpointRequests = this.checkpoints.map(checkpoint =>
-      this.tourService.addCheckpoint(checkpoint)
-    );
-  
-    // Use forkJoin to wait for all checkpoint requests to complete
-    forkJoin(checkpointRequests)
-      .subscribe(
-        checkpointResults => {
-          // checkpointResults is an array of results from each checkpoint request
-          checkpointResults.forEach(result => {
-            //this.checkpointIds.push(result.id || 1);
-            //this.checkpointIds.push(parseInt(result.id || '1'));
-            //console.log('Checkpoint added successfully:', result);
-            if (result && result.id) {
-              this.checkpointIds.push(parseInt(result.id));
-              console.log('Checkpoint added successfully:', result);
-            } else {
-              console.error('Checkpoint result is null or does not have an id property:', result);
-            }
-          });
-  
-          // After all checkpoints are saved, create the tour
-          const newTour: Tour = {
-            name: this.tourName,
-            description: this.tourDescription,
-            status: 0,
-            difficulty: this.tourDifficulty,
-            tags: [],
-            checkPoints: this.checkpointIds.sort((a, b) => a - b), // Sort checkpointIds in ascending order
-            equipment: [],
-            objects: [],
-            totalLength: 0,
-            footTime: 0,
-            bicycleTime: 0,
-            carTime: 0,
-            authorId: this.user.id,
-            publishTime: new Date().toISOString(),
-            price: this.tourPrice,
-            points: this.tourPoint,
-            image: this.imagePath,
-          };
-  
-          // Now, create the tour after all checkpoints are saved
-          this.tourService.addTour(newTour)
+    
+
+    const newTour: Tour = {
+      name: this.tourName,
+      description: this.tourDescription,
+      status: 0,
+      difficulty: this.tourDifficulty,
+      tags: [],
+      checkPoints: this.checkpointIds.sort((a, b) => a - b), // Sort checkpointIds in ascending order
+      equipment: [],
+      objects: [],
+      totalLength: 0,
+      footTime: 0,
+      bicycleTime: 0,
+      carTime: 0,
+      authorId: this.user.id,
+      publishTime: new Date().toISOString(),
+      price: this.tourPrice,
+      points: this.tourPoint,
+      image: this.imagePath,
+    };
+
+    this.tourService.addTour(newTour)
             .subscribe(
               tourResult => {
                 // Handle successful response if needed
                 console.log('Tour added successfully:', tourResult);
+
+                const checkpointRequests = this.checkpoints.map(checkpoint => {
+                  checkpoint.tourId = tourResult.id!
+                  this.tourService.addCheckpoint(checkpoint).subscribe( a => { 
+                  },
+                  tourError => {
+                    console.error('Error adding tour:', tourError);
+                  }
+                  );
+
+                }
+                );
 
                 this.router.navigate(['/view-tours-author']);
               },
@@ -288,12 +280,9 @@ private addLabelToPopupContent(categoryLabel: string, imageSrc: string, name: st
                 console.error('Error adding tour:', tourError);
               }
             );
-        },
-        error => {
-          // Handle error if any of the checkpoint requests fail
-          console.error('Error adding checkpoints:', error);
-        }
-      );
+    
+  
+  
       this.tourService.upload(this.selectedFile).subscribe({
         next: (value) => {
   
