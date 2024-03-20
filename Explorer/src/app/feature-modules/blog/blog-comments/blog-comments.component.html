@@ -19,7 +19,7 @@
                     <td>{{ getUserName(bc.userId) }}</td> <!-- Prikaz korisničkog imena -->
                     <td>                    
                     <td>
-                        <button color="accent" (click)="deleteBlogComment(bc.id || 0)" mat-icon-button>
+                        <button color="accent" *ngIf="bc.id !== undefined" (click)="deleteBlogComment(bc.id)" mat-icon-button>
                             <mat-icon>delete</mat-icon>
                         </button>
                         <button color="primary" (click)="onEditClicked(bc)" mat-icon-button>

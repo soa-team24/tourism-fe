@@ -93,15 +93,17 @@ export class BlogReviewComponent {
         next: (result: PagedResults<Blog>) => {
           console.log('Filtered blogs result:', result);
   
-          if (result.results && result.results.length > 0) {
-            this.blogs = result.results;
+          if (result && result.length > 0) {
+            this.blogs = Array.isArray(result) ? result : result.results;
             this.totalPages = Math.ceil(this.blogs.length / this.itemsPerPage);
             this.totalPageArray = Array.from({ length: this.totalPages }, (_, index) => index + 1);
-              
+            
             this.updateBlogRows();
           } else {
+            console.log('Nema rezultata za traženi status.');
             this.handleNoResults();
           }
+          
         },
         error: (error) => {
           this.handleHttpError(error);

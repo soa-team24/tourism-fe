@@ -14,7 +14,7 @@ import { User } from 'src/app/infrastructure/auth/model/user.model';
 })
 export class CommentsReviewComponent implements OnInit {
   @Input() comments: BlogComment[] = [];
-  blogId : number;
+  blogId : string;
   selectedBlogComment: BlogComment | null;
   shouldRenderBlogCommentForm: boolean = false;
   shouldEdit: boolean = false;
@@ -93,7 +93,7 @@ export class CommentsReviewComponent implements OnInit {
     });
   }
 
-  deleteBlogComment(id: number): void {
+  deleteBlogComment(id: string): void {
     this.blogService.deleteBlogComment(id).subscribe({
       next: () => {
         this.getBlogComment();

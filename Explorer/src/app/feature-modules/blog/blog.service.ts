@@ -18,8 +18,8 @@ export class BlogService {
     return this.http.get<PagedResults<BlogComment>>(environment.blogHost + 'comment')
   }
 
-  deleteBlogComment(id: number): Observable<BlogComment> {
-    return this.http.delete<BlogComment>(environment.apiHost + 'tourist/comment/' + id);
+  deleteBlogComment(id: string): Observable<BlogComment> {
+    return this.http.delete<BlogComment>(environment.blogHost + 'comment/' + id);
   }
 
   addBlogComment(comment: BlogComment): Observable<BlogComment> {
@@ -27,7 +27,7 @@ export class BlogService {
   }
 
   updateBlogComment(comment: BlogComment): Observable<BlogComment> {
-    return this.http.put<BlogComment>(environment.apiHost + 'tourist/comment/' + comment.id, comment);
+    return this.http.put<BlogComment>(environment.blogHost + 'comment/' + comment.id, comment);
   }
 
   getBlogs1(): Observable<Blog[]> {
@@ -38,8 +38,10 @@ export class BlogService {
   }
 
   getBlogsByStatus(status: BlogStatus): Observable<PagedResults<Blog>> {
-    return this.http.get<PagedResults<Blog>>(environment.apiHost + 'tourist/blog/byStatus/' + status)
+    return this.http.get<PagedResults<Blog>>(environment.blogHost + 'blog/byStatus/' + status)
   }
+
+  
 
   deleteBlog(id: string): Observable<Blog> {
     return this.http.delete<Blog>(environment.blogHost + 'blog/' + id);
