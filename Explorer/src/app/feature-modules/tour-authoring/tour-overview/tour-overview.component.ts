@@ -102,14 +102,14 @@ export class TourOverviewComponent {
           next: (result: Tour) => {
             this.tour = result;
             this.fetchCheckpointsForTour(this.tourId!);
-            this.fetchObjectsForTour(this.tour.objects);
-            this.fetchEquipmentForTour(this.tour.equipment);
+           // this.fetchObjectsForTour(this.tour.objects);
+            //this.fetchEquipmentForTour(this.tour.equipment);
             this.tourInfoForm.patchValue({
               name: this.tour?.name,
               description: this.tour?.description,
               difficulty: this.tour?.difficulty,
               publishTime: this.tour?.publishTime,
-              tags: this.tour?.tags.map(tag => `#${tag}`).join(' '), // Add "#" to each tag
+              //tags: this.tour?.tags.map(tag => `#${tag}`).join(' '), // Add "#" to each tag
               // Update with other properties
             });
             this.tourFetched = true;
@@ -181,7 +181,7 @@ export class TourOverviewComponent {
     );
   }
   
-  fetchCheckpointsForTour(tourId: string | null): void {
+  /*fetchCheckpointsForTour(tourId: string | null): void {
     if (tourId === null) {
       // Handle the case where tourId is null
       return;
@@ -208,7 +208,22 @@ export class TourOverviewComponent {
     } else {
       this.canRender = true; // If there are no checkpoint IDs, set canRender to true immediately.
     }
+  }*/
+
+  fetchCheckpointsForTour(tourId: string): void {
+    this.tourService.getCheckpointsByTourId(tourId).subscribe( checkPnts => { 
+      this.checkpoints = checkPnts;
+    },
+    tourError => {
+      console.error('Error adding tour:', tourError);
+    }
+    );
+
+    
   }
+
+
+
   onSubmit() {
     const existingTags = (this.tour.tags || []).map((tag: string) => tag.toLowerCase());
   
@@ -346,20 +361,14 @@ export class TourOverviewComponent {
   }
 
   
-  async fetchTourReviews(tourId: string): Promise<void> {
-    try {
-      const result = await this.marketplaceService.getTourReviewByTourId(tourId).toPromise();
-  
-      if (result && Array.isArray(result) && result.length > 0) {
-  
-        this.reviews = result;
-        
-      } else {
-        console.error('Invalid response format: Tour review data is unavailable.');
-      }
-    } catch (error) {
-      console.error('An error occurred:', error);
-    }
+ fetchTourReviews(tourId: string): void {
+  this.marketplaceService.getTourReviewByTourId(tourId).subscribe( checkPnts => { 
+    this.reviews = checkPnts;
+  },
+  tourError => {
+    console.error('Error tour review:', tourError);
+  }
+  );
   }
 }
 

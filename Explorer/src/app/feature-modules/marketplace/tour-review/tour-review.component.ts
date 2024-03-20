@@ -76,27 +76,14 @@ export class TourReviewComponent implements OnInit {
   
   
   
-  async getTourReviewByTourId(tourId: string): Promise<void> {
-    try {
-      const result = await this.service.getTourReviewByTourId(tourId).toPromise();
-  
-      if (result && Array.isArray(result) && result.length > 0) {
-  
-        // Make sure that the response structure is as expected.
-        // If it's an array of objects, you can access the first item like this:
-        const firstReview = result[0];
-  
-        // Assign the entire result to this.tourReview if that's your intention.
-        this.tourReview = result;
-  
-        // Make sure to call other functions that depend on this data here.
-        await this.loadUserNames();
-      } else {
-        console.error('Invalid response format: Tour review data is unavailable.');
-      }
-    } catch (error) {
-      console.error('An error occurred:', error);
+  getTourReviewByTourId(tourId: string): void {
+    this.service.getTourReviewByTourId(tourId).subscribe( checkPnts => { 
+      this.tourReview= checkPnts;
+    },
+    tourError => {
+      console.error('Error tour review:', tourError);
     }
+    );
   }
   
 
