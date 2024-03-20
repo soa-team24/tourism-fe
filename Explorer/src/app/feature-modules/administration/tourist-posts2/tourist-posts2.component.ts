@@ -57,7 +57,7 @@ export class TouristPosts2Component {
         break;
       }
       this.blogService.getRatingCount(blogPost.id).subscribe((ratingCount) => {
-        const rating = ratingCount.count;
+        const rating = ratingCount;
         this.blogRatings.push(rating);
       });
     }

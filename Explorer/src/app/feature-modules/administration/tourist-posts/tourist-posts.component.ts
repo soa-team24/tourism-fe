@@ -59,7 +59,7 @@ export class TouristPostsComponent implements OnInit{
         break;
       }
       this.blogService.getRatingCount(blogPost.id).subscribe((ratingCount) => {
-        const rating = ratingCount.count;
+        const rating = ratingCount;
         this.blogRatings.push(rating);
       });
     }

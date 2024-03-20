@@ -53,9 +53,20 @@ ngOnInit(): void {
        if (blogId) {
         this.getCommentsByBlogId(this.blogId);
         this.blogService.getRatingCount(this.blogId).subscribe((ratingCount) => {
-          this.ratingCount = ratingCount.count;
+          this.ratingCount = ratingCount;
           this.blogService.getSimilarBlogs(this.blogPost).subscribe((similarBlogs: Blog[]) => {
           this.similarBlogs = similarBlogs;
+        });
+        this.blogService.getAllVotes(this.blogId).subscribe((votes) => {
+            const userId = this.authService.user$.value.id;
+            const userVote = votes.find(vote => vote.userId === userId);
+            if(userVote){
+              if(userVote.isUpvote == true){
+                this.upvoted = true;
+              }else{
+                this.downvoted = true;
+              }
+            }
         });
         if(this.blogPost.tourReport){
           this.touristDistance = this.blogPost.tourReport.length;
@@ -101,7 +112,7 @@ ngOnInit(): void {
 
   updateRatingCount() {
     this.blogService.getRatingCount(this.blogId).subscribe((ratingCount) => {
-      this.ratingCount = ratingCount.count;
+      this.ratingCount = ratingCount;
       this.ratingCountUpdated.emit(ratingCount);
     });
   }
@@ -123,17 +134,45 @@ ngOnInit(): void {
           const rating: Rating = {
             isUpvote: true,
             userId: userId,
-            blogId: this.blogId
+            blogId: this.blogId,
+            creationTime: new Date()
           };
-      
-          this.blogService.addRating(rating).subscribe({
-            next: () => {
-              this.updateRatingCount();
-            },
-            error: (error) => {
-              // Obrada greške
+
+          this.blogService.getAllVotes(this.blogId).subscribe((votes) => {
+            const userId = this.authService.user$.value.id;
+            const userVote = votes.find(vote => vote.userId === userId);
+            if(userVote && userVote.isUpvote == false){
+              const upvote: Rating = {
+                isUpvote: true,
+                userId: userVote.userId,
+                blogId: this.blogId,
+                creationTime: new Date(),
+                id: userVote.id
+              };
+              this.blogService.updateRating(upvote).subscribe({
+                next: () => {
+                  this.updateRatingCount();
+                  this.upvoted = true;
+                  this.downvoted = false;
+                },
+                error: (error) => {
+                  // Obrada greške
+                }
+              });
+            }else if(!userVote){
+              this.blogService.addRating(rating).subscribe({
+                next: () => {
+                  this.updateRatingCount();
+                  this.upvoted = true;
+                  this.downvoted = false;
+                },
+                error: (error) => {
+                  // Obrada greške
+                }
+              });
             }
-          });
+        });
+      
         }
       })
     
@@ -151,26 +190,157 @@ ngOnInit(): void {
         }
         else{
           const userId = this.authService.user$.value.id;
-          this.upvoted = false;
-          this.downvoted = true;
           const rating: Rating = {
             isUpvote: false,
             userId: userId,
-            blogId: this.blogId
+            blogId: this.blogId,
+            creationTime: new Date()
           };
+
+          this.blogService.getAllVotes(this.blogId).subscribe((votes) => {
+            const userId = this.authService.user$.value.id;
+            const userVote = votes.find(vote => vote.userId === userId);
+            if(userVote && userVote.isUpvote == true){
+              const downvote: Rating = {
+                isUpvote: false,
+                userId: userVote.userId,
+                blogId: this.blogId,
+                creationTime: new Date(),
+                id: userVote.id
+              };
+              this.blogService.updateRating(downvote).subscribe({
+                next: () => {
+                  this.updateRatingCount();
+                  this.upvoted = false;
+                  this.downvoted = true;
+                },
+                error: (error) => {
+                  // Obrada greške
+                }
+              });
+            }else if(!userVote){
+              this.blogService.addRating(rating).subscribe({
+                next: () => {
+                  this.updateRatingCount();
+                  this.upvoted = false;
+                  this.downvoted = true;
+                },
+                error: (error) => {
+                  // Obrada greške
+                }
+              });
+            }
+        });
       
+        }
+      })
+    
+  }
+/*
+  upvoteClick() {
+    let blog$: Observable<Blog> = this.blogService.getBlog(this.blogId);
+  
+    blog$.subscribe((blog: Blog) => {
+      if (blog.status == BlogStatus.Closed) {
+        // Blog je zatvoren, ne dozvoljavajte dodavanje komentara
+        return;
+      }
+      
+      // Provera glasova korisnika
+      this.checkUserVote(this.authService.user$.value.id, true);
+    });
+  }
+  
+  downvoteClick() {
+    let blog$: Observable<Blog> = this.blogService.getBlog(this.blogId);
+  
+    blog$.subscribe((blog: Blog) => {
+      if (blog.status == BlogStatus.Closed) {
+        // Blog je zatvoren, ne dozvoljavajte dodavanje komentara
+        return;
+      }
+  
+      // Provera glasova korisnika
+      this.checkUserVote(this.authService.user$.value.id, false);
+    });
+  }
+  
+  checkUserVote(userId: number, isUpvote: boolean) {
+    // Poziv servisa za dobavljanje svih glasova za dati blog
+    this.blogService.getAllVotes(this.blogId).subscribe((votes: Rating[]) => {
+      // Provera da li korisnik već ima glas za dati blog
+      const userVote = votes.find(vote => vote.userId === userId);
+  
+      // Ako korisnik već ima glas
+      if (userVote) {
+        // Ako je korisnik već dao upvote, dozvoli mu da klikne na downvote
+        if (userVote.isUpvote && !isUpvote) {
+          // Dodaj novi glas (downvote)
+          const rating: Rating = {
+            isUpvote: isUpvote,
+            userId: userId,
+            blogId: this.blogId,
+            creationTime: new Date()
+          };
+  
           this.blogService.addRating(rating).subscribe({
             next: () => {
               this.updateRatingCount();
+              this.downvoted = true;
             },
             error: (error) => {
               // Obrada greške
             }
           });
         }
-      })
-    
-  }
+        // Ako je korisnik već dao downvote, dozvoli mu da klikne na upvote
+        else if (!userVote.isUpvote && isUpvote) {
+          // Dodaj novi glas (upvote)
+          const rating: Rating = {
+            isUpvote: isUpvote,
+            userId: userId,
+            blogId: this.blogId,
+            creationTime: new Date()
+          };
+  
+          this.blogService.addRating(rating).subscribe({
+            next: () => {
+              this.updateRatingCount();
+              this.upvoted = true;
+            },
+            error: (error) => {
+              // Obrada greške
+            }
+          });
+        }
+        // Ako je korisnik već dao isti glas kao i sadašnji klik, ne radi ništa
+        else {
+          return;
+        }
+      }
+      // Ako korisnik nema glas, dodaj novi glas
+      else {
+        // Dodaj novi glas (upvote ili downvote)
+        const rating: Rating = {
+          isUpvote: isUpvote,
+          userId: userId,
+          blogId: this.blogId,
+          creationTime: new Date()
+        };
+  
+        this.blogService.addRating(rating).subscribe({
+          next: () => {
+            this.updateRatingCount();
+          },
+          error: (error) => {
+            // Obrada greške
+          }
+        });
+      }
+    });
+  }*/
+  
+  
 
   sendRating() {
     this.blogService.addRating(this.rating).subscribe(

@@ -67,7 +67,7 @@ export class AppUserPostsComponent implements OnChanges {
         break;
       }
       this.blogService.getRatingCount(blogPost.id).subscribe((ratingCount) => {
-        const rating = ratingCount.count;
+        const rating = ratingCount;
         this.blogRatings.push(rating);
 
         // If you want to do something after all ratings are fetched, you can check if the array is complete.
