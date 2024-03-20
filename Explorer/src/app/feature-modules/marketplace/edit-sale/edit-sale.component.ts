@@ -37,22 +37,21 @@ export class EditSaleComponent {
   }
 
   ngOnInit(): void {
-    this.tourAuthoringService.getTours().subscribe((result) => {
-      this.tours = result.results.filter(tour => tour.status === 0);
+    this.tourAuthoringService.getTours().subscribe((tours) => {
+      this.tours = tours.filter(tour => tour.status === 0);
     });
-    
   }
  
 
-  addToSale(tourId: number, i: number): void {
-    if (this.addedTours !== undefined && !this.addedTours.includes(tourId)) {
-      this.addedTours.push(tourId);
+  addToSale(tourId: string, i: number): void {
+    if (this.addedTours !== undefined && !this.addedTours.includes(+tourId)) {
+      this.addedTours.push(+tourId);
     }
   }
 
-  removeFromSale(tourId: number, i: number): void {
-    if (this.addedTours !== undefined && this.addedTours.includes(tourId)) {
-      this.addedTours = this.addedTours.filter((id) => id !== tourId);
+  removeFromSale(tourId: string, i: number): void {
+    if (this.addedTours !== undefined && this.addedTours.includes(+tourId)) {
+      this.addedTours = this.addedTours.filter((id) => id !== +tourId);
     }
   }
 saleUpdate() {

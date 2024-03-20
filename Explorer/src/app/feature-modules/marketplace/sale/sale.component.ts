@@ -44,18 +44,19 @@ import { OrderItem } from '../model/order-item.model';
             
         })
         this.getAllSales()
-        this.tourAuthoringService.getTours().subscribe((data:PagedResults<Tour>)=>{
-            this.tours = data.results
+        this.tourAuthoringService.getTours().subscribe((data:Tour[])=>{
+            this.tours = data
         })
     }
 
     filterSalesByTourName() {
         console.log(this.tours)
         if (this.tourNameFilter !== '') {
-            const tourIds = this.tours.filter((tour:Tour) => tour.name.toLocaleLowerCase().includes(this.tourNameFilter.toLowerCase())).map(tour => tour.id);
-            this.filteredSales =  this.sales.filter(sale => sale.tourIds.some(tourId => tourIds.includes(tourId)));
-        }
-        else {
+            const tourIds = this.tours
+                .filter((tour: Tour) => tour.name.toLocaleLowerCase().includes(this.tourNameFilter.toLowerCase()))
+                .map(tour => tour.id); // Convert tour IDs to strings
+            this.filteredSales = this.sales.filter(sale => sale.tourIds.some(tourId => tourIds.includes(tourId.toString())));
+        } else {
             this.filteredSales = this.sales;
         }
     }
@@ -74,7 +75,7 @@ import { OrderItem } from '../model/order-item.model';
               this.shoppingCart = result;
               let list:Tour[] = [];
               for (let i = 0; i < sale.tourIds.length; i++) {
-                const tourid = sale.tourIds[i];
+                const tourid = sale.tourIds[i].toString();
                 list = this.tours.filter((tour)=>{
                     if (tour.id == tourid) {
                         return true

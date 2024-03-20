@@ -52,7 +52,7 @@ export class ViewComposedTourComponent {
 
   convertToTour(composedTour: ComposedTour): Tour {
     return {
-      id: composedTour.id,
+      id: composedTour.id?.toString(),
       name: composedTour.name,
       description: composedTour.description,
       difficulty: composedTour.difficulty,

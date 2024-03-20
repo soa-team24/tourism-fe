@@ -115,10 +115,10 @@
   </div>
 
   <!-- Add Review Form -->
-  <div *ngIf="userRole === 'tourist'" class="review-form">
+  <div *ngIf="userRole === 'tourist'" class="edit-button-wrapper">
     <h3>Add Your Review</h3>
-    <form (ngSubmit)="submitReview()">
-    </form>
+    <button (click)="submitReview()">  <i class="fas fa-circle-plus"> Add</i>
+    </button>
   </div>
 </div>
 

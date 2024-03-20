@@ -51,16 +51,19 @@ export class MarketplaceService {
     return this.http.get<any>(environment.apiHost + 'author/tour/average-grade/'+tourId)
   }
 
-  getTourReviewByTourId(id: number): Observable<PagedResults<TourReview>> {
-    return this.http.get<PagedResults<TourReview>>(environment.apiHost + 'tourist/tourReview/byTour/' + id);
+  getTourReviewByTourId(id: string): Observable<TourReview[]> {
+    return this.http.get<TourReview[]>(environment.goHost + 'tourReview/' + id);
   }
   
-  deleteTourReview(id: number): Observable<TourReview> {
+  deleteTourReview(id: string): Observable<TourReview> {
     return this.http.delete<TourReview>(environment.apiHost + 'tourist/tourReview/' + id);
   }
 
-  addTourReview(tourReview: TourReview, userId: number): Observable<TourReview> {
+ /* addTourReview(tourReview: TourReview, userId: number): Observable<TourReview> {
     return this.http.post<TourReview>(environment.apiHost + 'tourist/tourReview/'+ userId, tourReview);
+  }*/
+  addTourReview(tourReview: TourReview): Observable<TourReview> {
+    return this.http.post<TourReview>(environment.goHost + 'tourReview', tourReview);
   }
 
   addImage(tourReview: TourReview): Observable<TourReview>{

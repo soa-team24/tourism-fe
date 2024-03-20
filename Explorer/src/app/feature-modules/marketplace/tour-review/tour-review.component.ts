@@ -22,7 +22,7 @@ export class TourReviewComponent implements OnInit {
   userNames: { [key: number]: string } = {};
   showTable: boolean = false; // Initialize to hide the table
   currentUserId = this.authService.user$.value.id;
-  tourId : number;
+  tourId : string;
 
   constructor(private authService: AuthService, private service: MarketplaceService, private route: ActivatedRoute) { 
 
@@ -45,15 +45,16 @@ export class TourReviewComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      const tourId = +params['id']; // Ovo 'tourId' mora da se poklapa sa imenom parametra iz URL-a
+      const tourId = params['id']; // Extract the parameter value as string
       if (tourId) {
         this.tourId = tourId;
-        this.getTourReviewByTourId(tourId);
+        this.getTourReviewByTourId(tourId); // Convert back to number if needed
       } else {
         // Handle the case when there is no valid tour ID in the URL.
       }
     });
   }
+  
   
 
   loadUserNames(): void {
@@ -75,7 +76,7 @@ export class TourReviewComponent implements OnInit {
   
   
   
-  async getTourReviewByTourId(tourId: number): Promise<void> {
+  async getTourReviewByTourId(tourId: string): Promise<void> {
     try {
       const result = await this.service.getTourReviewByTourId(tourId).toPromise();
   
@@ -113,7 +114,7 @@ export class TourReviewComponent implements OnInit {
 
   
 
-  deleteTourReview(id: number): void {
+  deleteTourReview(id: string): void {
     if (this.tourId) {
       this.service.deleteTourReview(id).subscribe({
         next: () => {

@@ -137,13 +137,15 @@ export class TourAuthoringService {
       return this.http.get<PagedResults<Tour>>('https://localhost:44333/api/administrator/tour?page=0&pageSize=0');      
     }
   }
-
+/*
   getTours() : Observable<PagedResults<Tour>> {
-    return this.http.get<PagedResults<Tour>>('https://localhost:44333/api/author/tour?page=0&pageSize=0');
+    return this.http.get<PagedResults<Tour>>('http://localhost:8081/tour');
+  }*/
+  getTours(): Observable<Tour[]> {
+    return this.http.get<Tour[]>('http://localhost:8081/tour');
   }
-
-  getTour(id: Number): Observable<Tour> {
-    return this.http.get<Tour>('https://localhost:44333/api/author/tour/' + id);
+  getTour(id: string): Observable<Tour> {
+    return this.http.get<Tour>('http://localhost:8081/tour/' + id);
   }
 
   addTour(tour: Tour) : Observable<Tour>{
@@ -180,8 +182,8 @@ export class TourAuthoringService {
   }
 
 
-  getAverageGrade(tourId: number):Observable<any>{
-    return this.http.get<number>(environment.apiHost + 'author/tour/average-grade/'+tourId)
+  getAverageGrade(tourId: string):Observable<any>{
+    return this.http.get<number>(environment.goHost + 'tourReview/average-grade/'+tourId)
   }
 
   getAverageWeeklyGrade(tourId: number):Observable<any>{

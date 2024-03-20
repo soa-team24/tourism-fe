@@ -24,7 +24,7 @@ export class GiftCardComponent {
   username = this.authService.user$.value.username;
   tourProblem: GiftCard;
   user: User;
-  tourId: number;
+  tourId: string;
   loggedInProfile: Profile;
   followers: Profile[] = [];
   profiles: Profile[];
@@ -95,7 +95,7 @@ export class GiftCardComponent {
       
       ac:  Number(this.giftCardForm.value.amountToSend) || 0,
       note: this.giftCardForm.value.note || "", 
-      recommendedTour: this.tourId,
+      recommendedTour: +this.tourId,
       receiver: +this.giftCardForm.value.recipient!,
       senderId: this.user.id,
       sender: this.user.username,

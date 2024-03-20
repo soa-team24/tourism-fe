@@ -18,7 +18,7 @@ export class CheckpointComponent implements OnInit {
   shouldRenderCheckpointForm: boolean = false;
   shouldRenderEncounterForm: boolean = false;
   isClickEnabled: boolean = false;
-  tourId: Number;
+  tourId: string;
   tour: Tour;
   checkpointIds: Number[];
 
@@ -28,7 +28,7 @@ export class CheckpointComponent implements OnInit {
     this.route.params.subscribe(params => {
       const id = +params['id']; // Parse the 'id' as a number
       if (!isNaN(id)) {
-        this.tourId = id; // Set the 'tourId' if it's a valid number
+        this.tourId = id.toString(); // Set the 'tourId' if it's a valid number
         this.getCheckpoint();
       } else {
       }

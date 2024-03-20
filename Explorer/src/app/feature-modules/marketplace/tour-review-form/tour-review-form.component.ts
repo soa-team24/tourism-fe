@@ -16,9 +16,10 @@ export class TourReviewFormComponent implements OnChanges {
   
   constructor(private authService: AuthService, private service: MarketplaceService, private tourAuthoringService: TourAuthoringService, private route: ActivatedRoute) {
     this.route.params.subscribe(params => {
-      this.tourId = +params['id']; // Read the tourId from the URL
+      this.tourId = params['id']; // Read the tourId from the URL
     });
   }
+
 
   @Input() tourReview: TourReview;
   @Input() shouldEdit: boolean = false;
@@ -27,7 +28,7 @@ export class TourReviewFormComponent implements OnChanges {
   public value = new Date();
   currentFile: File;
   currentFileURL: string | null = null;
-  tourId: number;
+  tourId: string;
   userId = this.authService.user$.value.id;
   
   tourReviewForm = new FormGroup({
@@ -45,7 +46,7 @@ export class TourReviewFormComponent implements OnChanges {
         comment: this.tourReview.comment || null,
         images: this.tourReview.images || null,
         reviewDate: this.tourReview.reviewDate instanceof Date ? this.tourReview.reviewDate.toISOString() : null,
-        tourId : this.tourReview.grade.toString() || null,
+        tourId : this.tourReview.tourId.toString() || null,
       });
   }
 }
@@ -59,7 +60,8 @@ export class TourReviewFormComponent implements OnChanges {
       images: 'https://localhost:44333/Images/' + this.currentFile.name,
       userId: this.userId,
       reviewDate: this.value,
-      tourId: this.tourId
+      visitDate: this.value,
+      tourId: +this.tourId
  
     };
     await this.service.upload(this.currentFile).subscribe({
@@ -71,10 +73,15 @@ export class TourReviewFormComponent implements OnChanges {
       }, complete: () => {
       },
     });
-    this.service.addTourReview(tourReview,this.userId).subscribe({
+  /*  this.service.addTourReview(tourReview,this.userId).subscribe({
       next: (_) => {
         this.tourReviewUpdated.emit();
-      }});
+      }});*/
+
+      this.service.addTourReview(tourReview).subscribe({
+        next: (_) => {
+          this.tourReviewUpdated.emit();
+        }});
   }
 
   onFileSelected(event: any) {
@@ -95,7 +102,8 @@ export class TourReviewFormComponent implements OnChanges {
           reviewDate:  this.value,
           id: this.tourReview.id,
           images: this.tourReviewForm.value.images || "",
-          tourId: this.tourId
+          tourId: +this.tourId,
+          visitDate: this.value
         };
         this.service.updateTourReview(tourReview).subscribe({
           next: (_) => {
@@ -110,7 +118,8 @@ export class TourReviewFormComponent implements OnChanges {
           reviewDate:  this.value,
           id: this.tourReview.id,
           images: 'https://localhost:44333/Images/' + this.currentFile.name,
-          tourId: this.tourId
+          tourId: +this.tourId,
+          visitDate: this.value
         };
         await this.service.upload(this.currentFile).subscribe({
           next: (value) => {

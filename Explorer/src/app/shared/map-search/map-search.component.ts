@@ -323,7 +323,7 @@ export class MapSearchComponent {
 
 
       if (this.isActiveTourSearchActive) {
-        const tourIds: (number | undefined)[] = this.searchResults.map((tour: Tour) => tour.id);
+        const tourIds: (number | undefined)[] = this.searchResults.map((tour: Tour) => tour.id ? +tour.id : undefined);
         
         if (tourIds.every(Boolean)) {
           this.tourService.getActiveTours(tourIds).subscribe(
@@ -334,7 +334,8 @@ export class MapSearchComponent {
               console.error('Error:', error);
             }
           );
-        } 
+        }
+      
       }
       
       
@@ -441,7 +442,7 @@ export class MapSearchComponent {
               // Skip routes with fewer than 2 waypoints
               resolve(undefined);
             } else {
-              const routeColor = this.getTourColor(tour.id);
+              const routeColor = this.getTourColor(+tour.id!);
               const routeControl = L.Routing.control({
                 waypoints: waypointCoordinates,
                 router: L.Routing.mapbox('pk.eyJ1IjoiZGpucGxtcyIsImEiOiJjbG56Mzh3a2gwNWwzMnZxdDljdHIzNDIyIn0.iZjiPJJV-SgTiIOeF8UWvA', { profile: 'mapbox/walking' }),

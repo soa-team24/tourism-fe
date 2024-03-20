@@ -65,14 +65,14 @@ export class ComplexTourCreationComponent {
     this.displayedTours = this.displayedTours.filter(t => t.id !== tour.id);
     // Add tour to addedTours
     this.addedTours.push(tour);
-    this.addedTourIds.push(tour.id ?? -1);
+    this.addedTourIds.push(+tour.id! ?? -1);
   
   }
   // For example, if you want to go back to the displayed tours, you can create a method like this:
   goBackToDisplayedTours(tour: Tour) {
     // Remove tour from addedTours
     this.addedTours = this.addedTours.filter(t => t.id !== tour.id);
-    this.addedTourIds = this.addedTourIds.filter(id => id !== tour.id);
+    this.addedTourIds = this.addedTourIds.filter(id => id !== +tour.id!);
     // Add tour back to displayedTours
     this.displayedTours.push(tour);
   }

@@ -24,7 +24,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class TourOverviewComponent {
   tour: Tour;
-  tourId: number | null;
+  tourId: string | null;
   checkpoints: Checkpoint[] = [];
   canRender: boolean = false;
   images: string[] = [];
@@ -96,12 +96,12 @@ export class TourOverviewComponent {
 
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
-      this.tourId = id ? parseInt(id, 10) : null;
+      this.tourId = id ? parseInt(id, 10).toString() : null;
       if (this.tourId !== null) {
         this.tourService.getTour(this.tourId).subscribe({
           next: (result: Tour) => {
             this.tour = result;
-            this.fetchCheckpointsForTour(this.tourId);
+            this.fetchCheckpointsForTour(+this.tourId!);
             this.fetchObjectsForTour(this.tour.objects);
             this.fetchEquipmentForTour(this.tour.equipment);
             this.tourInfoForm.patchValue({
@@ -116,7 +116,7 @@ export class TourOverviewComponent {
             this.checkGetTourExecution();
           }
         });
-        this.fetchTourReviews();
+        this.fetchTourReviews(this.tourId);
 
         this.authService.user$.subscribe((user) => {
           this.userRole = user.role;
@@ -153,13 +153,7 @@ export class TourOverviewComponent {
     }
   }
 
-  fetchTourReviews(): void {
-    this.marketplaceService.getTourReview().subscribe({
-      next: (result) => {
-        this.reviews = result.results;
-      }
-    });
-  }
+
   private async fetchEquipmentForTour(equipmentIds: number[]): Promise<void> {
     this.equipment = undefined; // Set to undefined before fetching
   
@@ -274,9 +268,11 @@ export class TourOverviewComponent {
 
     console.log(`Deleting checkpoint: ${checkpoint.name}`);
   }
+
   submitReview(): void {
     // Implement logic to add a new review using the review service
     // Update the reviews array to reflect the new review
+    this.router.navigate(['/tour-review/' + this.tourId]);
   }
 
     // Define the getStarArray method
@@ -290,7 +286,7 @@ export class TourOverviewComponent {
       if(this.tour.id !== undefined){
         console.log("DA LI SE VIDIMO?")
         if(this.userRole === "tourist" && this.userId === this.tour.authorId){
-            this.tourExecutionService.getTourExecutionByTourAndUser(this.tour.id, this.userId).subscribe({
+            this.tourExecutionService.getTourExecutionByTourAndUser(+this.tour.id, this.userId).subscribe({
             next: (result: PagedResults<TourExecution>) => {
                 if (result && result.results.length > 0){
                   //WE TAKE 'FirstOf' THE COLLECTION
@@ -348,4 +344,29 @@ export class TourOverviewComponent {
   onCloseGiftClicked(): void {
     this.shouldRenderGiftForm = !this.shouldRenderGiftForm;
   }
+
+  
+  async fetchTourReviews(tourId: string): Promise<void> {
+    try {
+      const result = await this.marketplaceService.getTourReviewByTourId(tourId).toPromise();
+  
+      if (result && Array.isArray(result) && result.length > 0) {
+  
+        // Make sure that the response structure is as expected.
+        // If it's an array of objects, you can access the first item like this:
+        const firstReview = result[0];
+  
+        // Assign the entire result to this.tourReview if that's your intention.
+        this.reviews = result;
+  
+        // Make sure to call other functions that depend on this data here.
+        
+      } else {
+        console.error('Invalid response format: Tour review data is unavailable.');
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  }
 }
+

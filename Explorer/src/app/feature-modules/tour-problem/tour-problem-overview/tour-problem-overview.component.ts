@@ -277,10 +277,10 @@ import { Tour } from '../../tour-authoring/model/tour.model';
             id: undefined,
             response: this.response,
             timeStamp: new Date(),
-            tourProblemId: this.tourProblem.id,
+            tourProblemId: +this.tourProblem.id,
             commenterId: this.user.id
           };
-          this.problemResponseService.authorRespond(this.tourProblem.id, problemResponse).subscribe({
+          this.problemResponseService.authorRespond(+this.tourProblem.id, problemResponse).subscribe({
             next: () => {
               console.log("The response has been successfully sent!")
               this.showNotification('Your response has been successfully sent!');
@@ -297,10 +297,10 @@ import { Tour } from '../../tour-authoring/model/tour.model';
             id: undefined,
             response: this.response,
             timeStamp: new Date(),
-            tourProblemId: this.tourProblem.id,
+            tourProblemId: +this.tourProblem.id,
             commenterId: this.user.id
           };
-          this.problemResponseService.touristRespond(this.tourProblem.id, problemResponse).subscribe({
+          this.problemResponseService.touristRespond(+this.tourProblem.id, problemResponse).subscribe({
             next: () => {
               console.log("The response has been successfully sent!")
               this.showNotification('Your response has been successfully sent!');
@@ -317,10 +317,10 @@ import { Tour } from '../../tour-authoring/model/tour.model';
             id: undefined,
             response: this.response,
             timeStamp: new Date(),
-            tourProblemId: this.tourProblem.id,
+            tourProblemId: +this.tourProblem.id,
             commenterId: this.user.id
           };
-          this.problemResponseService.administratorRespond(this.tourProblem.id, problemResponse).subscribe({
+          this.problemResponseService.administratorRespond(+this.tourProblem.id, problemResponse).subscribe({
             next: () => {
               console.log("The response has been successfully sent!")
               this.showNotification('Your response has been successfully sent!');
