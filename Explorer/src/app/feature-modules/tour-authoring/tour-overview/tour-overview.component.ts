@@ -96,12 +96,12 @@ export class TourOverviewComponent {
 
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
-      this.tourId = id ? parseInt(id, 10).toString() : null;
+      this.tourId = id;
       if (this.tourId !== null) {
         this.tourService.getTour(this.tourId).subscribe({
           next: (result: Tour) => {
             this.tour = result;
-            this.fetchCheckpointsForTour(+this.tourId!);
+            this.fetchCheckpointsForTour(this.tourId!);
             this.fetchObjectsForTour(this.tour.objects);
             this.fetchEquipmentForTour(this.tour.equipment);
             this.tourInfoForm.patchValue({
@@ -181,7 +181,7 @@ export class TourOverviewComponent {
     );
   }
   
-  fetchCheckpointsForTour(tourId: number | null): void {
+  fetchCheckpointsForTour(tourId: string | null): void {
     if (tourId === null) {
       // Handle the case where tourId is null
       return;
@@ -352,14 +352,7 @@ export class TourOverviewComponent {
   
       if (result && Array.isArray(result) && result.length > 0) {
   
-        // Make sure that the response structure is as expected.
-        // If it's an array of objects, you can access the first item like this:
-        const firstReview = result[0];
-  
-        // Assign the entire result to this.tourReview if that's your intention.
         this.reviews = result;
-  
-        // Make sure to call other functions that depend on this data here.
         
       } else {
         console.error('Invalid response format: Tour review data is unavailable.');
