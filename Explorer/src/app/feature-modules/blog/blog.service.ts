@@ -58,11 +58,15 @@ export class BlogService {
   }
 
   addRating(rating: Rating): Observable<any> {
-    return this.http.put(environment.apiHost + 'tourist/blog/AddRating', rating);
+    return this.http.post(environment.blogHost + 'blog/votes/'+ rating.blogId, rating);
   }
 
-  getRatingCount(id: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiHost}tourist/blog/RatingCount?blogId=${id}`);
+  updateRating(rating: Rating):Observable<any> {
+    return this.http.put(environment.blogHost + 'blog/votes/'+ rating.id, rating);
+  }
+
+  getRatingCount(id: string): Observable<number> {
+    return this.http.get<number>(environment.blogHost + 'blog/votes/'+ id);
   }  
   
 
@@ -80,6 +84,11 @@ export class BlogService {
   getBlogsByUserId(id: number): Observable<Blog> {
     return this.http.get<Blog>(environment.blogHost + 'blog/byUser/' + id);
   }
+
+  getAllVotes(id: string): Observable<Rating[]> {
+    return this.http.get<Rating[]>(environment.blogHost + 'blog/allVotes/' + id);
+  }
+
   getCommentsByBlogId(id: string): Observable<PagedResults<BlogComment>> {
     return this.http.get<PagedResults<BlogComment>>(environment.blogHost + 'comment/byBlog/' + id);
   }
