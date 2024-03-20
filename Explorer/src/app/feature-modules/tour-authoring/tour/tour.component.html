@@ -24,7 +24,7 @@
                     </div>
                     
                     <td>
-                        <button color="accent" (click)="deleteTour(t.id || 0)" mat-icon-button>
+                        <button color="accent" (click)="deleteTour(t.id!)" mat-icon-button>
                             <mat-icon>delete</mat-icon>
                         </button>
                         <button color="primary" (click)="onEditClicked(t)" mat-icon-button>

@@ -22,7 +22,7 @@ export class InviteMembersToTourComponent implements OnInit{
   invitedMemberIds: number[] = [];
   user: User | undefined;
   senderId: number;
-  tourId: number;
+  tourId: string;
   club: Club;
   tour: Tour;
 
@@ -77,7 +77,7 @@ export class InviteMembersToTourComponent implements OnInit{
       return;
     }
 
-    this.clubService.inviteMembersToTour(this.clubId, this.senderId, this.tourId, this.invitedMemberIds)
+    this.clubService.inviteMembersToTour(this.clubId, this.senderId, +this.tourId, this.invitedMemberIds)
       .subscribe(
         result => {
           console.log('Response from server:', result);

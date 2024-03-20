@@ -1,5 +1,5 @@
 export interface TourProblem {
-    id?: number;
+    id?: string;
     problemCategory: string;
     problemPriority: string;
     description?: string;

@@ -23,8 +23,8 @@ export class ViewToursAuthorComponent {
 
   getTour(): void {
     this.service.getTours().subscribe({
-      next: (result: PagedResults<Tour>) => {
-        this.tours = result.results;
+      next: (result: Tour[]) => {
+        this.tours = result;
         console.log(this.tours);
         this.filterTours();
       },

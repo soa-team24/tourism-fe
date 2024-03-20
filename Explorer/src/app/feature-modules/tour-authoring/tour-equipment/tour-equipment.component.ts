@@ -17,7 +17,7 @@ export class TourEquipmentComponent implements OnInit {
   selectedEquipment: Equipment;
   shouldRenderEquipmentForm: boolean = false;
   shouldEdit: boolean = false;
-  tourId: Number;
+  tourId: string;
   tour: Tour;
 
   constructor(private service: TourAuthoringService, private route: ActivatedRoute) { }
@@ -27,7 +27,7 @@ export class TourEquipmentComponent implements OnInit {
     this.route.params.subscribe(params => {
       const id = +params['id']; // Parse the 'id' as a number
       if (!isNaN(id)) {
-        this.tourId = id; // Set the 'tourId' if it's a valid number
+        this.tourId = id.toString(); // Set the 'tourId' if it's a valid number
         this.getEquipment();
       } else {
       }

@@ -89,7 +89,7 @@ const routes: Routes = [
   {path: 'equipment/:id', component: TourEquipmentComponent},
   {path: 'object', component: ObjectComponent},
   {path: 'tour-review-form', component: TourReviewFormComponent},
-  {path: 'tour-review', component: TourReviewComponent},
+  {path: 'tour-review/:id', component: TourReviewComponent},
   {path: 'clubs', component: ClubsOverviewComponent},
   {path: 'clubs/:id', component: ClubOverviewComponent},
   {path: 'clubRequest', component: ClubRequestComponent, canActivate: [AuthGuard],},

@@ -23,9 +23,9 @@ export class TourComponent implements OnInit{
 
   getTour(): void {
     this.service.getTours().subscribe({
-      next: (result: PagedResults<Tour>) =>
+      next: (result: Tour[]) =>
       {
-        this.tour = result.results;
+        this.tour = result;
       },
       error: () => {
       }     
@@ -43,8 +43,8 @@ export class TourComponent implements OnInit{
     this.shouldEdit = false;
   }
 
-  deleteTour(id: number):void {
-    this.service.deleteTour(id).subscribe({
+  deleteTour(id: string):void {
+    this.service.deleteTour(+id).subscribe({
       next: () => {
         this.getTour();
       },

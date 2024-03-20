@@ -50,7 +50,7 @@ export class ActiveTourComponent implements OnInit {
     this.touristPosition = JSON.parse(touristPositionRaw);
     this.tourExecutionService.getTourExecution(id).subscribe((tourExecution: TourExecution) => {
       this.tourExecution = tourExecution
-      this.tourAuthoringService.getTour(tourExecution.tourId).subscribe((tour: Tour) => {
+      this.tourAuthoringService.getTour(tourExecution.tourId.toString()).subscribe((tour: Tour) => {
         this.tour = tour;
         this.getCheckpoints();
       })

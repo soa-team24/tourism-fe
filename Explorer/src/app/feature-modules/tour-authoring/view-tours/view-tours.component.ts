@@ -171,9 +171,9 @@ export class ViewToursComponent implements OnInit {
       console.log(tour)
     
       if (tour.id !== undefined) {
-        const averageGrade$ = this.service.getAverageWeeklyGrade(tour.id);
+        const averageGrade$ = this.service.getAverageWeeklyGrade(+tour.id);
         const reviews$ = this.marketService.getTourReviewByTourId(tour.id);
-        const purchaseTokens$ = this.marketService.getWeeklyTokensByTourId(tour.id);
+        const purchaseTokens$ = this.marketService.getWeeklyTokensByTourId(+tour.id);
   
         observables.push(averageGrade$, reviews$, purchaseTokens$);
     
@@ -219,11 +219,11 @@ export class ViewToursComponent implements OnInit {
   
   async getTours(): Promise<void> {
     try {
-      const result: PagedResults<Tour> | undefined = await this.service.getTours().toPromise();
+      const result: Tour[] | undefined = await this.service.getTours().toPromise();
 
       if (result) {
-        this.allTours = result.results.filter(tour => tour.status === 1);
-        this.tours = result.results.filter(tour => tour.status === 1);
+        this.allTours = result.filter(tour => tour.status === 1);
+        this.tours = result.filter(tour => tour.status === 1);
         this.sortToursByPointsDescending();
 
         if (!this.isActiveTourSearchActive && this.isNearbyTourSearchActive) {
@@ -231,10 +231,12 @@ export class ViewToursComponent implements OnInit {
         }
 
         if (this.isActiveTourSearchActive) {
-          const tourIds: (number | undefined)[] = this.tours.map((tour: Tour) => tour.id);
-          
-          if (tourIds.every(Boolean)) {
-            this.service.getActiveTours(tourIds).subscribe(
+          const tourIds: (number | undefined)[] = this.tours.map((tour: Tour) => tour.id ? +tour.id : undefined);
+        
+          const validTourIds: (number | undefined)[] = tourIds.filter(id => id !== undefined);
+        
+          if (validTourIds.every(Boolean)) {
+            this.service.getActiveTours(validTourIds).subscribe(
               (pagedResults: PagedResults<Tour>) => {
                 this.tours = pagedResults.results;
               },
@@ -278,7 +280,7 @@ export class ViewToursComponent implements OnInit {
       if (tour.id !== undefined) {
         this.service.getAverageGrade(tour.id).subscribe((averageGrade) => {
           if (tour.id !== undefined) {
-            this.tourAverageGrades[tour.id] = averageGrade.averageGrade;
+            this.tourAverageGrades[+tour.id] = averageGrade.averageGrade;
           } 
         });
       }
@@ -308,12 +310,12 @@ export class ViewToursComponent implements OnInit {
     for (const tour of this.tours) {
       if (tour.id !== undefined) {
         this.marketService.getTourReviewByTourId(tour.id).subscribe((pagedResult) => {
-          if (pagedResult.results && Array.isArray(pagedResult.results)) {
+          if (pagedResult && Array.isArray(pagedResult)) {
             // Assuming you want to store each TourReview separately
-            for (const tourReview of pagedResult.results) {
+            for (const tourReview of pagedResult) {
               // Handle each TourReview individually
               if(tourReview.id!==undefined)
-              this.tourReviews[tourReview.id] = tourReview;
+              this.tourReviews[parseInt(tourReview.id || '')] = tourReview;
             }
           } 
         });
@@ -343,10 +345,10 @@ getTourExecutions(tourId: number) : void {
 
     for (const tour of this.tours) {
       if (tour.id !== undefined) {
-       this.executionService.getTourExecutionByTourAndUser(tour.id, this.userId).subscribe((result) => {
+       this.executionService.getTourExecutionByTourAndUser(+tour.id, this.userId).subscribe((result) => {
        this.tourExecutions = result.results;   });
        }
-      if (this.coutnTourReviewForTour(tour.id ?? 0) > 50  && this.tourAverageGrades[tour.id ?? 0] > 4) {
+      if (this.coutnTourReviewForTour(+tour.id! ?? 0) > 50  && this.tourAverageGrades[+tour.id! ?? 0] > 4) {
           if(tour.difficulty == this.preference.difficulty) {
             tour.points+=3;
           }
@@ -373,7 +375,7 @@ getTourExecutions(tourId: number) : void {
  
   async startTour(tour: Tour) {
     let tourExecution: TourExecution = {
-      tourId: tour.id!,
+      tourId: +tour.id!,
       TouristId: this.authService.user$.value.id,
       StartTime: new Date(),
       EndTime: undefined,
@@ -445,7 +447,7 @@ getTourExecutions(tourId: number) : void {
     console.log("ACTIVE TOUR SEARCH CLICKED")
     this.isActiveTourSearchActive = !this.isActiveTourSearchActive;
     if (this.isActiveTourSearchActive && !this.isNearbyTourSearchActive) {
-      const tourIds: (number | undefined)[] = this.tours.map((tour: Tour) => tour.id);
+      const tourIds: (number | undefined)[] = this.tours.map((tour: Tour) => tour.id ? +tour.id : undefined);
       
       if (tourIds.every(Boolean)) {
         this.service.getActiveTours(tourIds).subscribe(
@@ -456,7 +458,7 @@ getTourExecutions(tourId: number) : void {
             console.error('Error:', error);
           }
         );
-      } 
+      }
     }
     if (!this.isActiveTourSearchActive && this.isNearbyTourSearchActive) {
       this.getTours();
@@ -539,7 +541,7 @@ getTourExecutions(tourId: number) : void {
       });
 
       if (this.isActiveTourSearchActive) {
-        const tourIds: (number | undefined)[] = this.searchResults.map((tour: Tour) => tour.id);
+        const tourIds: (number | undefined)[] = this.searchResults.map((tour: Tour) => tour.id ? +tour.id : undefined);
         
         if (tourIds.every(Boolean)) {
           this.service.getActiveTours(tourIds).subscribe(
@@ -551,7 +553,8 @@ getTourExecutions(tourId: number) : void {
               console.error('Error:', error);
             }
           );
-        } 
+        }
+      
       }
     });
   }
@@ -598,7 +601,7 @@ getTourExecutions(tourId: number) : void {
     this.service.getWishlist(this.userId).subscribe({
       next: (result: Wishlist) => {
         this.wishlist = result;
-        this.service.addWishlistItem2(this.wishlist, tour.id!).subscribe({
+        this.service.addWishlistItem2(this.wishlist, +tour.id!).subscribe({
           next: () => {
             // Uspesno dodavanje u wishlist
             this.showSnackbar('Tour added to wishlist!');
