@@ -1,6 +1,6 @@
 export interface Checkpoint {
 
-    id?: number,
+    id?: string,
     name: string,
     description: string,
     longitude: number,

@@ -45,7 +45,8 @@ export class TourAuthoringService {
     return this.http.get<Checkpoint>(`https://localhost:44333/api/addcheckpoint/checkpoint/${checkpointId}`);
   }
   addCheckpoint(checkpoint: Checkpoint) : Observable<Checkpoint>{
-    return this.http.post<Checkpoint>('https://localhost:44333/api/addcheckpoint/checkpoint/', checkpoint)
+    //return this.http.post<Checkpoint>('https://localhost:44333/api/addcheckpoint/checkpoint/', checkpoint);
+    return this.http.post<Checkpoint>('http://localhost:8081/checkpoint' , checkpoint);
   }
 
   updateCheckpoint(checkpoint: Checkpoint): Observable<Checkpoint>{
@@ -148,7 +149,9 @@ export class TourAuthoringService {
 
   addTour(tour: Tour) : Observable<Tour>{
     console.log(tour);
-    return this.http.post<Tour>('https://localhost:44333/api/author/tour' , tour)
+    //return this.http.post<Tour>('https://localhost:44333/api/author/tour' , tour)
+    //goHost: 'http://localhost:8081/'
+    return this.http.post<Tour>('http://localhost:8081/tour' , tour)
   }
 
 

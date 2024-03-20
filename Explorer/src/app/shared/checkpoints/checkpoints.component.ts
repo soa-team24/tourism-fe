@@ -242,8 +242,15 @@ private addLabelToPopupContent(categoryLabel: string, imageSrc: string, name: st
         checkpointResults => {
           // checkpointResults is an array of results from each checkpoint request
           checkpointResults.forEach(result => {
-            this.checkpointIds.push(result.id || 1);
-            console.log('Checkpoint added successfully:', result);
+            //this.checkpointIds.push(result.id || 1);
+            //this.checkpointIds.push(parseInt(result.id || '1'));
+            //console.log('Checkpoint added successfully:', result);
+            if (result && result.id) {
+              this.checkpointIds.push(parseInt(result.id));
+              console.log('Checkpoint added successfully:', result);
+            } else {
+              console.error('Checkpoint result is null or does not have an id property:', result);
+            }
           });
   
           // After all checkpoints are saved, create the tour

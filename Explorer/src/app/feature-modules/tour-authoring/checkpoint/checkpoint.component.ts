@@ -46,7 +46,7 @@ export class CheckpointComponent implements OnInit {
                 const checkpoint = results.results[i];
                 for (let j = 0; j < this.tour.checkPoints.length; j++) {
                   const cpId = this.tour.checkPoints[j];
-                  if (checkpoint.id == cpId) {
+                  if (checkpoint.id && parseInt(checkpoint.id) === cpId) {
                     temporaryList.push(checkpoint);
                   }
                 }

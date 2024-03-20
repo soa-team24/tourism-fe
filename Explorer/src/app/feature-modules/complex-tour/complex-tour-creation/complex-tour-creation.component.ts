@@ -127,9 +127,12 @@ export class ComplexTourCreationComponent {
           (checkpointsArray: Checkpoint[][]) => {
             this.globalCheckpoints = checkpointsArray.flat();
             console.log('Global Checkpoints:', this.globalCheckpoints);
-  
-            this.globalCheckpointIds = this.globalCheckpoints.map(checkpoint => checkpoint.id || -1);
-            this.allEquipmentIds = this.allEquipment.map(equipment => equipment.id || -1);
+            
+            //this.globalCheckpointIds = this.globalCheckpoints.map(checkpoint => checkpoint.id || '-1');
+            this.globalCheckpointIds = this.globalCheckpoints.map(checkpoint => parseInt(checkpoint.id || ''));
+
+            //this.allEquipmentIds = this.allEquipment.map(equipment => equipment.id || '-1');
+            this.allEquipmentIds = this.allEquipment.map(equipment => equipment.id ? parseInt(String(equipment.id)) : -1);
 
             console.log('Global Checkpoint IDs:', this.globalCheckpointIds);
           },
