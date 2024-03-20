@@ -347,6 +347,11 @@ export class TourAuthoringService {
   sendGift(giftCard: GiftCard): Observable<GiftCard> {
     return this.http.post<GiftCard>(`https://localhost:44333/api/tourist/giftCard`, giftCard);  
   }
+
+  getCheckpointsByTourId(id: string): Observable<Checkpoint[]> {
+    return this.http.get<Checkpoint[]>(environment.goHost + 'checkpointByTourID/' + id);
+  }
+
 }
 
 
