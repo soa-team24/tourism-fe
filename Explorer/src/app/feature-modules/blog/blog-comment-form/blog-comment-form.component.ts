@@ -17,7 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class BlogCommentFormComponent {
 
-  @Output() blogCommentUpdated = new EventEmitter<BlogComment | null>();
+  @Output() blogCommentUpdated = new EventEmitter<BlogComment>();
   @Input() blogComment: BlogComment;
   @Input() shouldEdit: boolean = false;
   @Input() blogId :  string = "";
@@ -84,7 +84,7 @@ export class BlogCommentFormComponent {
     };
     blogComment.id = this.blogComment.id;
     this.service.updateBlogComment(blogComment).subscribe({
-      next: () => { this.blogCommentUpdated.emit(); this.showNotification('Comment successfully edited!')}
+      next: () => { this.blogCommentUpdated.emit(blogComment); this.showNotification('Comment successfully edited!')}
     });
   }
 
