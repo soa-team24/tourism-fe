@@ -25,7 +25,7 @@ export class BlogCommentsComponent implements OnInit {
     this.getBlogComment();
   }
   
-  deleteBlogComment(id: number): void {
+  deleteBlogComment(id: string): void {
     this.service.deleteBlogComment(id).subscribe({
       next: () => {
         this.getBlogComment();
