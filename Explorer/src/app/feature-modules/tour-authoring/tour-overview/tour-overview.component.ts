@@ -362,8 +362,8 @@ export class TourOverviewComponent {
 
   
  fetchTourReviews(tourId: string): void {
-  this.marketplaceService.getTourReviewByTourId(tourId).subscribe( checkPnts => { 
-    this.reviews = checkPnts;
+  this.marketplaceService.getTourReviewByTourId(tourId).subscribe( tourReview => { 
+    this.reviews = tourReview;
   },
   tourError => {
     console.error('Error tour review:', tourError);

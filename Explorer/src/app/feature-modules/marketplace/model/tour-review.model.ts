@@ -6,5 +6,5 @@ export interface TourReview {
     userId: number;
     reviewDate: Date;
     visitDate: Date;
-    tourId: number;
+    tourId: string;
 }

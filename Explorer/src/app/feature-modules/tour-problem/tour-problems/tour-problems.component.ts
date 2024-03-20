@@ -100,8 +100,8 @@ export class TourProblemsComponent implements OnInit {
 
     else if(this.user?.role == 'tourist' && this.user?.id){
       this.tourProblemService.getTourProblemsTourist(this.user.id).subscribe({
-        next: (result: PagedResults<TourProblem>) => {
-          this.tourProblems = result.results.filter(problem => problem.touristId === this.user?.id);
+        next: (result: TourProblem[]) => {
+          this.tourProblems = result.filter(problem => problem.touristId === this.user?.id);
           this.tourProblems = this.tourProblems.filter((tourProblem) => !tourProblem.isClosed);
           
         },
@@ -216,7 +216,7 @@ export class TourProblemsComponent implements OnInit {
 
       this.tourProblemService.problemSolved(tourProblem).subscribe({
         next: () => {
-          console.log("Tour problem has been solved")
+          alert("Tour problem has been solved")
           this.showNotification('Tour Problem successfully solved!');
           this.getTourProblems();
         },

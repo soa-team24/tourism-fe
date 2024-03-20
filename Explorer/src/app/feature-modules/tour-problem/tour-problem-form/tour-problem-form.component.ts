@@ -76,7 +76,9 @@ export class TourProblemFormComponent implements OnInit {
 
     this.service.addTourProblemTourist(tourProblem).subscribe({
       next: () => {
+        alert("Report has been sent!")
         this.router.navigate(['/view-tours-tourist']);
+
       }
     });
   }

@@ -71,14 +71,14 @@ export class TourProblemService {
   
     //Tourist HTTP Request Methods
 
-  getTourProblemsTourist(id:number): Observable<PagedResults<TourProblem>> {
-    return this.http.get<PagedResults<TourProblem>>(environment.apiHost + 'tourist/tour-problem/by-tourist/' + id);
+  getTourProblemsTourist(id:number): Observable<TourProblem[]> {
+    return this.http.get<TourProblem[]>(environment.goHost + 'tourProblem/' + id);
   }
 
 
 
   addTourProblemTourist(tourProblem: TourProblem): Observable<TourProblem> {
-    return this.http.post<TourProblem>(environment.apiHost + 'tourist/tour-problem', tourProblem);
+    return this.http.post<TourProblem>(environment.goHost + 'tourProblem', tourProblem);
   }
 
   updateTourProblemTourist(tourProblem: TourProblem): Observable<TourProblem> {
