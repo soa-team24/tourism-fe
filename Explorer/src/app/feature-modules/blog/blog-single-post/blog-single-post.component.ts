@@ -382,10 +382,6 @@ onCommentAdded(comment: BlogComment): void {
   this.getCommentsByBlogId(this.blogId);
 }
 
-onCommentUpdated(comment: BlogComment): void { 
-  this.comments.push(comment); 
-  this.getCommentsByBlogId(this.blogId);
-}
 
 }
 
