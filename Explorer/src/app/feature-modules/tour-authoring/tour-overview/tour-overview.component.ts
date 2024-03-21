@@ -61,7 +61,7 @@ export class TourOverviewComponent {
   nextSection() {
     if (this.userRole === 'author') {
       // If the user is an author, navigate through sections 0 to 4 continuously
-      this.currentSection = (this.currentSection + 1) % 5;
+      this.currentSection = (this.currentSection + 1) % 3;
     } else {
       // If the user is a tourist, navigate through sections 0 to 2 continuously
       this.currentSection = (this.currentSection + 1) % 3;
@@ -86,7 +86,7 @@ export class TourOverviewComponent {
       description: [''],
       difficulty: [''],
       publishTime: [''],
-      tags: [''], // Add the 'tags' form control
+      //tags: [''], // Add the 'tags' form control
       // Add more form controls as needed
     });
     
@@ -154,6 +154,7 @@ export class TourOverviewComponent {
   }
 
 
+
   private async fetchEquipmentForTour(equipmentIds: number[]): Promise<void> {
     this.equipment = undefined; // Set to undefined before fetching
   
@@ -213,6 +214,7 @@ export class TourOverviewComponent {
   fetchCheckpointsForTour(tourId: string): void {
     this.tourService.getCheckpointsByTourId(tourId).subscribe( checkPnts => { 
       this.checkpoints = checkPnts;
+      this.canRender = true;
     },
     tourError => {
       console.error('Error adding tour:', tourError);
@@ -225,7 +227,7 @@ export class TourOverviewComponent {
 
 
   onSubmit() {
-    const existingTags = (this.tour.tags || []).map((tag: string) => tag.toLowerCase());
+    /*const existingTags = (this.tour.tags || []).map((tag: string) => tag.toLowerCase());
   
     // Process the input string
     const newTags = (this.tourInfoForm.get('tags')?.value || '')
@@ -240,14 +242,14 @@ export class TourOverviewComponent {
       if (!uniqueNewTags.includes(tag)) {
         uniqueNewTags.push(tag);
       }
-    });
+    });*/
   
     // Remove deleted tags
     const updatedValues = {
       name: this.tourInfoForm.get('name')?.value || '',
       description: this.tourInfoForm.get('description')?.value || '',
-      difficulty: this.tourInfoForm.get('difficulty')?.value || 0,
-      tags: [...uniqueNewTags],
+      difficulty: this.tourInfoForm.get('difficulty')?.value.toString() || '',
+      //tags: [...uniqueNewTags],
       // Add more properties as needed
     };
   
@@ -256,7 +258,7 @@ export class TourOverviewComponent {
       ...this.tour,
       ...updatedValues,
     };
-  
+    this.tour.id = this.tourId!;
     this.tourService.updateTour(this.tour)
       .subscribe(updatedTour => {
         console.log('Tour updated successfully:', updatedTour);
@@ -265,7 +267,7 @@ export class TourOverviewComponent {
           description: updatedTour?.description,
           difficulty: updatedTour?.difficulty,
           publishTime: updatedTour?.publishTime,
-          tags: updatedTour?.tags.map(tag => `#${tag}`).join(' '), // Add "#" to each tag
+          //tags: updatedTour?.tags.map(tag => `#${tag}`).join(' '), // Add "#" to each tag
           // Update with other properties
         });
       }, error => {

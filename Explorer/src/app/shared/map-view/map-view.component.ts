@@ -51,7 +51,7 @@ export class MapViewComponent implements AfterViewInit {
         console.log(this.loadedTour);
   
         // Fetch objects for the tour and update the objects array
-        await this.fetchObjectsForTour(this.loadedTour.objects);
+        //await this.fetchObjectsForTour(this.loadedTour.objects);
   
         // Add markers for categories after fetching objects
         this.addMarkersForCategory(1); // Restrooms
@@ -64,7 +64,7 @@ export class MapViewComponent implements AfterViewInit {
     
   }
 
-  private async fetchObjectsForTour(objectIds: number[]): Promise<void> {
+  /*private async fetchObjectsForTour(objectIds: number[]): Promise<void> {
     this.objects = undefined; // Set to undefined before fetching
   
     const objectRequests: Observable<Object>[] = objectIds.map(objectId =>
@@ -76,7 +76,7 @@ export class MapViewComponent implements AfterViewInit {
   
     // Update the objects array
     this.objects = objects;
-  }
+  }*/
     
   ngAfterViewInit(): void {
     let DefaultIcon = L.icon({
@@ -259,10 +259,10 @@ deleteRoutes(): void {
 // Updated addMarkersForCategory method
 private async addMarkersForCategory(category: number): Promise<void> {
   return new Promise<void>((resolve) => {
-    const filteredObjects = this.objects ? this.objects.filter((obj) => obj.category + 1 === category) : [];
+    //const filteredObjects = this.objects ? this.objects.filter((obj) => obj.category + 1 === category) : [];
     const promises: Promise<void>[] = [];
 
-    filteredObjects.forEach((object) => {
+    /*filteredObjects.forEach((object) => {
       const promise = new Promise<void>((resolveObject) => {
         this.mapService.reverseSearch(object.latitude, object.longitude).subscribe((res) => {
           if (res.address) {
@@ -296,7 +296,7 @@ private async addMarkersForCategory(category: number): Promise<void> {
       });
 
       promises.push(promise);
-    });
+    });*/
 
     Promise.all(promises).then(() => {
       resolve();

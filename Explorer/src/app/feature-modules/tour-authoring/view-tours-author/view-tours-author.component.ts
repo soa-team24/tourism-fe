@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Tour } from '../model/tour.model';
 import { TourAuthoringService } from '../tour-authoring.service';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
+import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 
 @Component({
   selector: 'xp-view-tours-author',
@@ -14,15 +15,25 @@ export class ViewToursAuthorComponent {
   draftTours: Tour[] = [];
   publishedTours: Tour[] = [];
   archivedTours: Tour[] = [];
+  tour: Tour;
+  tourId: string | null;
+  userId: number;
+  isLogged: boolean;
 
-  constructor(private service: TourAuthoringService) {}
+  constructor(private service: TourAuthoringService, private tourService: TourAuthoringService, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.getTour();
+    if (this.authService.user$.value) {
+      this.isLogged = true;
+      this.userId = this.authService.user$.value.id;
+       
+    }
+
+    this.getTour(); 
   }
 
   getTour(): void {
-    this.service.getTours().subscribe({
+    this.service.getToursByAuthor(this.userId).subscribe({
       next: (result: Tour[]) => {
         this.tours = result;
         console.log(this.tours);
@@ -44,6 +55,53 @@ export class ViewToursAuthorComponent {
     console.log(this.publishedTours);
     console.log(this.archivedTours);
 
+  }
+
+  onPublishClickedGo(selectedTour: Tour): void {
+
+    const updatedValues = {
+      status: 1
+    };
+  
+    // Update the existing this.tour object with the form values
+    const updatedTour = {
+      ...selectedTour,
+      ...updatedValues,
+    };
+
+    this.tourId = selectedTour.id!;
+    this.tourService.updateTour(updatedTour)
+      .subscribe(updatedTour => {
+        console.log('Tour updated successfully:', updatedTour);
+        this.getTour();
+      }, error => {
+        console.error('Error updating tour:', error);
+        // Handle the error appropriately
+      });
+  }
+
+
+  onArchiveClickedGo(selectedTour: Tour): void {
+
+    const updatedValues = {
+      status: 2
+    };
+  
+    // Update the existing this.tour object with the form values
+    const updatedTour = {
+      ...selectedTour,
+      ...updatedValues,
+    };
+
+    this.tourId = selectedTour.id!;
+    this.tourService.updateTour(updatedTour)
+      .subscribe(updatedTour => {
+        console.log('Tour updated successfully:', updatedTour);
+        this.getTour();
+      }, error => {
+        console.error('Error updating tour:', error);
+        // Handle the error appropriately
+      });
   }
 
 

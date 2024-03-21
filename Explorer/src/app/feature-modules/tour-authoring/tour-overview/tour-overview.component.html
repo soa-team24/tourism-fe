@@ -45,11 +45,11 @@
     <input type="number" formControlName="difficulty" [readonly]="!editMode" />
   </label>
   
-  <label>
+  <!--<label>
     <strong>Tags:</strong>
     <textarea formControlName="tags" [readonly]="!editMode"></textarea>
-  </label>
-  
+  </label>-->
+
   <label *ngIf="this.tourExecution">
     <strong>Since this is your tour, write a blog about it!</strong>
     <button  type="button" mat-raised-button id="entity-raised-button" (click)="navigateToBlogForm()">Write</button>
@@ -124,20 +124,18 @@
 
 <!-- Tour Equipment Section -->
 <div *ngIf="currentSection === 3" class="section equipment-section">
-  <!-- Display Tour Equipment here -->
   <h2><i class="fa-solid fa-binoculars"></i> Tour Equipment</h2>
   <div class="edit-button-wrapper" *ngIf="userRole === 'author'">
     <button class="add-object-button">
-      <i class="fas fa-circle-plus"> Add</i> <!-- FontAwesome edit icon -->
+      <i class="fas fa-circle-plus"> Add</i> 
     </button>
   </div>
   <div class="equipment-container">
-    <!-- Loop through each equipment item and display its name and description -->
     <div *ngFor="let equipmentItem of equipment" class="equipment-item">
       <h3>{{ equipmentItem.name }}</h3>
       <p>{{ equipmentItem.description }}</p>
       <button class="add-object-button" *ngIf="userRole === 'author'">
-        <i class="fas fa-trash"></i> Remove<!-- FontAwesome edit icon -->
+        <i class="fas fa-trash"></i> Remove
       </button>
     </div>
   </div>
@@ -146,11 +144,10 @@
 
 <!-- Tour Objects Section -->
 <div *ngIf="currentSection === 4" class="section object-section">
-  <!-- Display Tour Equipment here -->
   <h2><i class="fa-solid fa-building"></i> Tour Objects</h2>
   <div class="edit-button-wrapper" *ngIf="userRole === 'author'">
     <button class="add-object-button">
-      <i class="fas fa-circle-plus"> Add</i> <!-- FontAwesome edit icon -->
+      <i class="fas fa-circle-plus"> Add</i> 
     </button>
   </div>
   <div *ngFor="let tourObject of objects" class="object-item">
@@ -172,7 +169,6 @@
           <p class="other">Category: Other <i class="fas fa-question other-icon"></i></p>
         </div>
       </div>
-      <!-- Move edit and delete buttons here -->
       <div class="object-actions" *ngIf="userRole === 'author'">
         <button>
           <i class="fas fa-edit"></i>  

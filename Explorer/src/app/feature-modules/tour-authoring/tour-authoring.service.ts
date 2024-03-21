@@ -145,6 +145,11 @@ export class TourAuthoringService {
   getTours(): Observable<Tour[]> {
     return this.http.get<Tour[]>('http://localhost:8081/tour');
   }
+
+  getToursByAuthor(authorId: Number): Observable<Tour[]> {
+    return this.http.get<Tour[]>('http://localhost:8081/toursByAuthorId/' + authorId);
+  }
+
   getTour(id: string): Observable<Tour> {
     return this.http.get<Tour>('http://localhost:8081/tour/' + id);
   }
@@ -158,7 +163,11 @@ export class TourAuthoringService {
 
 
   updateTour(tour: Tour): Observable<Tour>{
-    return this.http.put<Tour>('https://localhost:44333/api/author/tour/' + tour.id, tour)
+      // Create a new object to avoid changing the original tour object
+    const updatedTour: Tour = { ...tour }; // Copy all properties from the original tour
+    updatedTour.difficulty = tour.difficulty.toString()  as any;
+
+    return this.http.put<Tour>('http://localhost:8081/tour/' + tour.id, updatedTour)
   }
 
   updateTourCheckpoints(tour:Tour,checkpointId:number) {
