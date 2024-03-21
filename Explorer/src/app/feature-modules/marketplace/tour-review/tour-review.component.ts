@@ -77,8 +77,9 @@ export class TourReviewComponent implements OnInit {
   
   
   getTourReviewByTourId(tourId: string): void {
-    this.service.getTourReviewByTourId(tourId).subscribe( checkPnts => { 
-      this.tourReview= checkPnts;
+    this.service.getTourReviewByTourId(tourId).subscribe( tourReview => { 
+      this.tourReview= tourReview;
+      this.loadUserNames();
     },
     tourError => {
       console.error('Error tour review:', tourError);

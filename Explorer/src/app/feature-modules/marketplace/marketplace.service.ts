@@ -56,7 +56,7 @@ export class MarketplaceService {
   }
   
   deleteTourReview(id: string): Observable<TourReview> {
-    return this.http.delete<TourReview>(environment.apiHost + 'tourist/tourReview/' + id);
+    return this.http.delete<TourReview>(environment.goHost + 'tourReview/' + id);
   }
 
  /* addTourReview(tourReview: TourReview, userId: number): Observable<TourReview> {
@@ -69,8 +69,9 @@ export class MarketplaceService {
   addImage(tourReview: TourReview): Observable<TourReview>{
     return this.http.post<TourReview>(environment.apiHost + 'tourist/tourReview/uploadFile', tourReview);
   }
+
   updateTourReview(tourReview: TourReview): Observable<TourReview> {
-    return this.http.put<TourReview>(environment.apiHost + 'tourist/tourReview/' + tourReview.id, tourReview);
+    return this.http.put<TourReview>(environment.goHost + 'tourReview/' + tourReview.id, tourReview);
   }
 
   upload(file: File): Observable<HttpEvent<any>> {

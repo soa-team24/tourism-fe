@@ -49,7 +49,7 @@ export class ViewToursComponent implements OnInit {
   allTours: Tour[] = [];
   searchResults: Tour[] = [];
   selectedTour: Tour | null = null; // Store the selected tour
-  tourAverageGrades: { [tourId: number]: number } = {};
+  tourAverageGrades: { [tourId: string]: number } = {};
   shoppingCartId: Number;
   shoppingCart: ShoppingCart;
   numberOfItems: number;
@@ -279,9 +279,10 @@ export class ViewToursComponent implements OnInit {
     for (const tour of this.tours) {
       if (tour.id !== undefined) {
         this.service.getAverageGrade(tour.id).subscribe((averageGrade) => {
-          if (tour.id !== undefined) {
-            this.tourAverageGrades[+tour.id] = averageGrade.averageGrade;
-          } 
+          
+          this.tourAverageGrades[tour.id!] = averageGrade;
+          //this.tourAverageGrades.push({ id: tour.id!, averageGrade: averageGrade.averageGrade });
+      
         });
       }
     }
@@ -327,7 +328,7 @@ export class ViewToursComponent implements OnInit {
   coutnTourReviewForTour(id : number) : number {
     let tourNumber = 0
     for(const tourReview of this.tourReviews) {
-      if (id == tourReview.tourId) {
+      if (id == +tourReview.tourId) {
           tourNumber++;
       }
     }

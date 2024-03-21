@@ -195,7 +195,7 @@ export class TourAuthoringService {
 
 
   getAverageGrade(tourId: string):Observable<any>{
-    return this.http.get<number>(environment.goHost + 'tourReview/average-grade/'+tourId)
+    return this.http.get<number>(environment.goHost + 'tourReview/average-grade/'+ tourId)
   }
 
   getAverageWeeklyGrade(tourId: number):Observable<any>{
