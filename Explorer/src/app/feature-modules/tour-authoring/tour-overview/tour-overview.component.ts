@@ -24,7 +24,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class TourOverviewComponent {
   tour: Tour;
-  tourId: number | null;
+  tourId: string | null;
   checkpoints: Checkpoint[] = [];
   canRender: boolean = false;
   images: string[] = [];
@@ -61,7 +61,7 @@ export class TourOverviewComponent {
   nextSection() {
     if (this.userRole === 'author') {
       // If the user is an author, navigate through sections 0 to 4 continuously
-      this.currentSection = (this.currentSection + 1) % 5;
+      this.currentSection = (this.currentSection + 1) % 3;
     } else {
       // If the user is a tourist, navigate through sections 0 to 2 continuously
       this.currentSection = (this.currentSection + 1) % 3;
@@ -86,7 +86,7 @@ export class TourOverviewComponent {
       description: [''],
       difficulty: [''],
       publishTime: [''],
-      tags: [''], // Add the 'tags' form control
+      //tags: [''], // Add the 'tags' form control
       // Add more form controls as needed
     });
     
@@ -96,27 +96,27 @@ export class TourOverviewComponent {
 
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
-      this.tourId = id ? parseInt(id, 10) : null;
+      this.tourId = id;
       if (this.tourId !== null) {
         this.tourService.getTour(this.tourId).subscribe({
           next: (result: Tour) => {
             this.tour = result;
-            this.fetchCheckpointsForTour(this.tourId);
-            this.fetchObjectsForTour(this.tour.objects);
-            this.fetchEquipmentForTour(this.tour.equipment);
+            this.fetchCheckpointsForTour(this.tourId!);
+           // this.fetchObjectsForTour(this.tour.objects);
+            //this.fetchEquipmentForTour(this.tour.equipment);
             this.tourInfoForm.patchValue({
               name: this.tour?.name,
               description: this.tour?.description,
               difficulty: this.tour?.difficulty,
               publishTime: this.tour?.publishTime,
-              tags: this.tour?.tags.map(tag => `#${tag}`).join(' '), // Add "#" to each tag
+              //tags: this.tour?.tags.map(tag => `#${tag}`).join(' '), // Add "#" to each tag
               // Update with other properties
             });
             this.tourFetched = true;
             this.checkGetTourExecution();
           }
         });
-        this.fetchTourReviews();
+        this.fetchTourReviews(this.tourId);
 
         this.authService.user$.subscribe((user) => {
           this.userRole = user.role;
@@ -153,13 +153,8 @@ export class TourOverviewComponent {
     }
   }
 
-  fetchTourReviews(): void {
-    this.marketplaceService.getTourReview().subscribe({
-      next: (result) => {
-        this.reviews = result.results;
-      }
-    });
-  }
+
+
   private async fetchEquipmentForTour(equipmentIds: number[]): Promise<void> {
     this.equipment = undefined; // Set to undefined before fetching
   
@@ -187,7 +182,7 @@ export class TourOverviewComponent {
     );
   }
   
-  fetchCheckpointsForTour(tourId: number | null): void {
+  /*fetchCheckpointsForTour(tourId: string | null): void {
     if (tourId === null) {
       // Handle the case where tourId is null
       return;
@@ -214,9 +209,25 @@ export class TourOverviewComponent {
     } else {
       this.canRender = true; // If there are no checkpoint IDs, set canRender to true immediately.
     }
+  }*/
+
+  fetchCheckpointsForTour(tourId: string): void {
+    this.tourService.getCheckpointsByTourId(tourId).subscribe( checkPnts => { 
+      this.checkpoints = checkPnts;
+      this.canRender = true;
+    },
+    tourError => {
+      console.error('Error adding tour:', tourError);
+    }
+    );
+
+    
   }
+
+
+
   onSubmit() {
-    const existingTags = (this.tour.tags || []).map((tag: string) => tag.toLowerCase());
+    /*const existingTags = (this.tour.tags || []).map((tag: string) => tag.toLowerCase());
   
     // Process the input string
     const newTags = (this.tourInfoForm.get('tags')?.value || '')
@@ -231,14 +242,14 @@ export class TourOverviewComponent {
       if (!uniqueNewTags.includes(tag)) {
         uniqueNewTags.push(tag);
       }
-    });
+    });*/
   
     // Remove deleted tags
     const updatedValues = {
       name: this.tourInfoForm.get('name')?.value || '',
       description: this.tourInfoForm.get('description')?.value || '',
-      difficulty: this.tourInfoForm.get('difficulty')?.value || 0,
-      tags: [...uniqueNewTags],
+      difficulty: this.tourInfoForm.get('difficulty')?.value.toString() || '',
+      //tags: [...uniqueNewTags],
       // Add more properties as needed
     };
   
@@ -247,7 +258,7 @@ export class TourOverviewComponent {
       ...this.tour,
       ...updatedValues,
     };
-  
+    this.tour.id = this.tourId!;
     this.tourService.updateTour(this.tour)
       .subscribe(updatedTour => {
         console.log('Tour updated successfully:', updatedTour);
@@ -256,7 +267,7 @@ export class TourOverviewComponent {
           description: updatedTour?.description,
           difficulty: updatedTour?.difficulty,
           publishTime: updatedTour?.publishTime,
-          tags: updatedTour?.tags.map(tag => `#${tag}`).join(' '), // Add "#" to each tag
+          //tags: updatedTour?.tags.map(tag => `#${tag}`).join(' '), // Add "#" to each tag
           // Update with other properties
         });
       }, error => {
@@ -274,9 +285,11 @@ export class TourOverviewComponent {
 
     console.log(`Deleting checkpoint: ${checkpoint.name}`);
   }
+
   submitReview(): void {
     // Implement logic to add a new review using the review service
     // Update the reviews array to reflect the new review
+    this.router.navigate(['/tour-review/' + this.tourId]);
   }
 
     // Define the getStarArray method
@@ -290,7 +303,7 @@ export class TourOverviewComponent {
       if(this.tour.id !== undefined){
         console.log("DA LI SE VIDIMO?")
         if(this.userRole === "tourist" && this.userId === this.tour.authorId){
-            this.tourExecutionService.getTourExecutionByTourAndUser(this.tour.id, this.userId).subscribe({
+            this.tourExecutionService.getTourExecutionByTourAndUser(+this.tour.id, this.userId).subscribe({
             next: (result: PagedResults<TourExecution>) => {
                 if (result && result.results.length > 0){
                   //WE TAKE 'FirstOf' THE COLLECTION
@@ -348,4 +361,16 @@ export class TourOverviewComponent {
   onCloseGiftClicked(): void {
     this.shouldRenderGiftForm = !this.shouldRenderGiftForm;
   }
+
+  
+ fetchTourReviews(tourId: string): void {
+  this.marketplaceService.getTourReviewByTourId(tourId).subscribe( tourReview => { 
+    this.reviews = tourReview;
+  },
+  tourError => {
+    console.error('Error tour review:', tourError);
+  }
+  );
+  }
 }
+

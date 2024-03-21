@@ -134,6 +134,6 @@
         <!-- <button [routerLink]="['/tour-problem', tourProblem?.id, 'responses']" color="primary" mat-raised-button id="entity-icon-button">View responses</button> -->
        <!-- <button mat-raised-button id="entity-icon-button" (click)="onViewResponsesClicked()">View Responses</button>-->
 <div>
-    <xp-tour-problem-response *ngIf="shouldRenderResponses" [currentProblemId] = "tourProblemId"></xp-tour-problem-response>
+    <xp-tour-problem-response *ngIf="shouldRenderResponses" [currentProblemId]="tourProblemId !== null ? +tourProblemId : null"></xp-tour-problem-response>
 </div>
 </div>

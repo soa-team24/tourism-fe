@@ -73,7 +73,7 @@ export class BundleViewComponent implements OnInit{
   }
 
   getToursDetails(tourIds: number[]): void {
-    const tourRequests: Observable<Tour>[] = tourIds.map(tourId => this.service.getTour(tourId));
+    const tourRequests: Observable<Tour>[] = tourIds.map(tourId => this.service.getTour(tourId.toString()));
   
     // Koristimo forkJoin da bismo paralelno izvršili sve zahteve za ture
     forkJoin(tourRequests).subscribe(

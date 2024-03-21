@@ -24,7 +24,8 @@
                         <td>{{cp.latitude}}</td>
                         <td><img class="thumbnail" src={{cp.image}} alt="" srcset=""></td>
                         <td>
-                            <button (click)="deleteCheckpoint(cp.id || 0)" color="accent" mat-icon-button>
+                            <!--<button (click)="deleteCheckpoint(cp.id || 0)" color="accent" mat-icon-button>-->
+                            <button (click)="deleteCheckpoint(cp.id ? +cp.id : 0)" color="accent" mat-icon-button>
                                 <mat-icon>delete</mat-icon>
                             </button>
                             <button (click)="onEditClicked(cp)" color="primary" mat-icon-button>

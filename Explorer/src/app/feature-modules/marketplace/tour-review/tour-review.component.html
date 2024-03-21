@@ -32,7 +32,8 @@
                                 <img src="{{tr.images}}" alt="" srcset="">
                             </div>
                             <div class="button-action">
-                                <button  *ngIf="tr.userId === currentUserId" color="accent" (click)="deleteTourReview(tr.id || 0)" mat-icon-button>
+                                <button *ngIf="tr.userId === currentUserId" color="accent" (click)="deleteTourReview(tr.id!)" mat-icon-button>
+
                                     <mat-icon>delete</mat-icon>
                                 </button>
                                 <button  *ngIf="tr.userId === currentUserId" color="primary" (click)="onEditClicked(tr)" mat-icon-button>

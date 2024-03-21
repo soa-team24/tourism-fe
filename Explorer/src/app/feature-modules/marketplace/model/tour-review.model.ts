@@ -1,9 +1,10 @@
 export interface TourReview {
-    id?: number;
+    id?: string;
     grade: number;
     comment: string;
     images: string;
     userId: number;
     reviewDate: Date;
-    tourId: number;
+    visitDate: Date;
+    tourId: string;
 }

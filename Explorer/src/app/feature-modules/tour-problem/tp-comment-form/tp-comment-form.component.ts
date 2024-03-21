@@ -60,10 +60,10 @@ export class TpCommentFormComponent {
           id: undefined,
           response: this.addCommentForm.value.comment,
           timeStamp: new Date(),
-          tourProblemId: this.problem.id,
+          tourProblemId: +this.problem.id,
           commenterId: this.user.id
         };
-        this.problemResponseService.touristRespond(this.problem.id, newComment).subscribe({
+        this.problemResponseService.touristRespond(+this.problem.id, newComment).subscribe({
           next: () => {
             console.log("The comment has been successfully added!")
             this.showNotification('Tour Problem successfully reported again!');

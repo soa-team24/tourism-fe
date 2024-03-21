@@ -132,7 +132,7 @@ export class ExecutionMapComponent implements OnInit {
       for (let i = 0; i < this.checkpoints.length; i++) {
         
         const checkpoint = this.checkpoints[i];
-        if(this.tourExecution.visitedCheckpoints.includes(checkpoint.id || -1))
+        if(this.tourExecution.visitedCheckpoints.includes(parseInt(checkpoint.id || '0')))  //izmenjeno
         {
           const lat = checkpoint.latitude;
           const lng = checkpoint.longitude;

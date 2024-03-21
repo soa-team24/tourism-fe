@@ -22,7 +22,7 @@ export class TourReviewComponent implements OnInit {
   userNames: { [key: number]: string } = {};
   showTable: boolean = false; // Initialize to hide the table
   currentUserId = this.authService.user$.value.id;
-  tourId : number;
+  tourId : string;
 
   constructor(private authService: AuthService, private service: MarketplaceService, private route: ActivatedRoute) { 
 
@@ -45,15 +45,16 @@ export class TourReviewComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      const tourId = +params['id']; // Ovo 'tourId' mora da se poklapa sa imenom parametra iz URL-a
+      const tourId = params['id']; // Extract the parameter value as string
       if (tourId) {
         this.tourId = tourId;
-        this.getTourReviewByTourId(tourId);
+        this.getTourReviewByTourId(tourId); // Convert back to number if needed
       } else {
         // Handle the case when there is no valid tour ID in the URL.
       }
     });
   }
+  
   
 
   loadUserNames(): void {
@@ -75,27 +76,15 @@ export class TourReviewComponent implements OnInit {
   
   
   
-  async getTourReviewByTourId(tourId: number): Promise<void> {
-    try {
-      const result = await this.service.getTourReviewByTourId(tourId).toPromise();
-  
-      if (result && Array.isArray(result) && result.length > 0) {
-  
-        // Make sure that the response structure is as expected.
-        // If it's an array of objects, you can access the first item like this:
-        const firstReview = result[0];
-  
-        // Assign the entire result to this.tourReview if that's your intention.
-        this.tourReview = result;
-  
-        // Make sure to call other functions that depend on this data here.
-        await this.loadUserNames();
-      } else {
-        console.error('Invalid response format: Tour review data is unavailable.');
-      }
-    } catch (error) {
-      console.error('An error occurred:', error);
+  getTourReviewByTourId(tourId: string): void {
+    this.service.getTourReviewByTourId(tourId).subscribe( tourReview => { 
+      this.tourReview= tourReview;
+      this.loadUserNames();
+    },
+    tourError => {
+      console.error('Error tour review:', tourError);
     }
+    );
   }
   
 
@@ -113,7 +102,7 @@ export class TourReviewComponent implements OnInit {
 
   
 
-  deleteTourReview(id: number): void {
+  deleteTourReview(id: string): void {
     if (this.tourId) {
       this.service.deleteTourReview(id).subscribe({
         next: () => {

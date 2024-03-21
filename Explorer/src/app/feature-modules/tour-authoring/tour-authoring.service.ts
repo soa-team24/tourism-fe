@@ -45,7 +45,8 @@ export class TourAuthoringService {
     return this.http.get<Checkpoint>(`https://localhost:44333/api/addcheckpoint/checkpoint/${checkpointId}`);
   }
   addCheckpoint(checkpoint: Checkpoint) : Observable<Checkpoint>{
-    return this.http.post<Checkpoint>('https://localhost:44333/api/addcheckpoint/checkpoint/', checkpoint)
+    //return this.http.post<Checkpoint>('https://localhost:44333/api/addcheckpoint/checkpoint/', checkpoint);
+    return this.http.post<Checkpoint>('http://localhost:8081/checkpoint' , checkpoint);
   }
 
   updateCheckpoint(checkpoint: Checkpoint): Observable<Checkpoint>{
@@ -137,23 +138,36 @@ export class TourAuthoringService {
       return this.http.get<PagedResults<Tour>>('https://localhost:44333/api/administrator/tour?page=0&pageSize=0');      
     }
   }
-
+/*
   getTours() : Observable<PagedResults<Tour>> {
-    return this.http.get<PagedResults<Tour>>('https://localhost:44333/api/author/tour?page=0&pageSize=0');
+    return this.http.get<PagedResults<Tour>>('http://localhost:8081/tour');
+  }*/
+  getTours(): Observable<Tour[]> {
+    return this.http.get<Tour[]>('http://localhost:8081/tour');
   }
 
-  getTour(id: Number): Observable<Tour> {
-    return this.http.get<Tour>('https://localhost:44333/api/author/tour/' + id);
+  getToursByAuthor(authorId: Number): Observable<Tour[]> {
+    return this.http.get<Tour[]>('http://localhost:8081/toursByAuthorId/' + authorId);
+  }
+
+  getTour(id: string): Observable<Tour> {
+    return this.http.get<Tour>('http://localhost:8081/tour/' + id);
   }
 
   addTour(tour: Tour) : Observable<Tour>{
     console.log(tour);
-    return this.http.post<Tour>('https://localhost:44333/api/author/tour' , tour)
+    //return this.http.post<Tour>('https://localhost:44333/api/author/tour' , tour)
+    //goHost: 'http://localhost:8081/'
+    return this.http.post<Tour>('http://localhost:8081/tour' , tour)
   }
 
 
   updateTour(tour: Tour): Observable<Tour>{
-    return this.http.put<Tour>('https://localhost:44333/api/author/tour/' + tour.id, tour)
+      // Create a new object to avoid changing the original tour object
+    const updatedTour: Tour = { ...tour }; // Copy all properties from the original tour
+    updatedTour.difficulty = tour.difficulty.toString()  as any;
+
+    return this.http.put<Tour>('http://localhost:8081/tour/' + tour.id, updatedTour)
   }
 
   updateTourCheckpoints(tour:Tour,checkpointId:number) {
@@ -180,8 +194,8 @@ export class TourAuthoringService {
   }
 
 
-  getAverageGrade(tourId: number):Observable<any>{
-    return this.http.get<number>(environment.apiHost + 'author/tour/average-grade/'+tourId)
+  getAverageGrade(tourId: string):Observable<any>{
+    return this.http.get<number>(environment.goHost + 'tourReview/average-grade/'+ tourId)
   }
 
   getAverageWeeklyGrade(tourId: number):Observable<any>{
@@ -342,6 +356,11 @@ export class TourAuthoringService {
   sendGift(giftCard: GiftCard): Observable<GiftCard> {
     return this.http.post<GiftCard>(`https://localhost:44333/api/tourist/giftCard`, giftCard);  
   }
+
+  getCheckpointsByTourId(id: string): Observable<Checkpoint[]> {
+    return this.http.get<Checkpoint[]>(environment.goHost + 'checkpointByTourID/' + id);
+  }
+
 }
 
 
