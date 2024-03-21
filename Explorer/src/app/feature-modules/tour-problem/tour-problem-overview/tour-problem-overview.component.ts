@@ -25,7 +25,7 @@ import { Tour } from '../../tour-authoring/model/tour.model';
 
     user: User;
     tour: Tour;
-    tourProblemId: number | null;
+    tourProblemId: string | null;
 
     tourProblem: TourProblem;
     shouldEdit: boolean = false;
@@ -79,10 +79,10 @@ import { Tour } from '../../tour-authoring/model/tour.model';
 
       this.route.paramMap.subscribe(params =>{
         const id = params.get('id');
-        this.tourProblemId = id ? parseInt(id, 10) : null;
+        this.tourProblemId = id ;
         if (this.tourProblemId !== null){
           if(this.user?.role == 'administrator'){
-            this.tourProblemService.getTourProblemAdministrator(this.tourProblemId).subscribe({
+            this.tourProblemService.getTourProblemAdministrator(+this.tourProblemId).subscribe({
               next: (result: TourProblem) => {
                   this.tourProblem = result;
                   this.tourProblemService.getTour(this.tourProblem.tourId)
@@ -97,7 +97,7 @@ import { Tour } from '../../tour-authoring/model/tour.model';
               }
             });
           } else if(this.user?.role == 'author') {
-            this.tourProblemService.getTourProblemForAuthor(this.tourProblemId).subscribe({
+            this.tourProblemService.getTourProblemForAuthor(+this.tourProblemId).subscribe({
               next: (result: TourProblem) => {
                   this.tourProblem = result;
                   this.tourProblemService.getTour(this.tourProblem.tourId)

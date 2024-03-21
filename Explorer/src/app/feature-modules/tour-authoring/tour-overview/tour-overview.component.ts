@@ -213,6 +213,7 @@ export class TourOverviewComponent {
   fetchCheckpointsForTour(tourId: string): void {
     this.tourService.getCheckpointsByTourId(tourId).subscribe( checkPnts => { 
       this.checkpoints = checkPnts;
+      this.canRender = true;
     },
     tourError => {
       console.error('Error adding tour:', tourError);

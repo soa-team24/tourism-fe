@@ -72,7 +72,7 @@ export class TourProblemService {
     //Tourist HTTP Request Methods
 
   getTourProblemsTourist(id:number): Observable<TourProblem[]> {
-    return this.http.get<TourProblem[]>(environment.goHost + 'tourProblem/' + id);
+    return this.http.get<TourProblem[]>(environment.goHost + 'tourProblems/' + id);
   }
 
 
@@ -86,16 +86,16 @@ export class TourProblemService {
   }
   
 
-  getTourProblemTourist(id:number) : Observable<TourProblem>{
-    return this.http.get<TourProblem>(environment.apiHost + 'tourist/tour-problem/' + id);
+  getTourProblemTourist(id:string) : Observable<TourProblem>{
+    return this.http.get<TourProblem>(environment.goHost + 'tourProblem/' + id);
   } 
 
   problemSolved(tourProblem: TourProblem): Observable<TourProblem> {
-    return this.http.post<TourProblem>(environment.apiHost + 'tourist/tour-problem/problemSolved', tourProblem);
+    return this.http.put<TourProblem>(environment.goHost + 'tourProblem', tourProblem);
   }
 
   problemUnsolved(tourProblem: TourProblem): Observable<TourProblem> {
-    return this.http.post<TourProblem>(environment.apiHost + 'tourist/tour-problem/problemUnsolved', tourProblem);
+    return this.http.put<TourProblem>(environment.goHost + 'tourProblem', tourProblem);
   }
 
 
