@@ -85,7 +85,6 @@ export class BlogManagemetComponent {
   
       if (result && Array.isArray(result) && result.length > 0) {
   
-        const firstBlog = result[0];
   
         this.blogs = result;
   

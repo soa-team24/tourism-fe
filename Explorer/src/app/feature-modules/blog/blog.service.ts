@@ -56,15 +56,15 @@ export class BlogService {
   }
 
   updateBlog(blog: Blog): Observable<Blog> {
-    return this.http.put<Blog>(environment.blogHost + 'blog/' + blog.id, blog);
+    return this.http.patch<Blog>(environment.blogHost + 'blog/' + blog.id, blog);
   }
 
-  addRating(rating: Rating): Observable<any> {
-    return this.http.post(environment.blogHost + 'blog/votes/'+ rating.blogId, rating);
+  addRating(rating: Rating, id: string): Observable<any> {
+    return this.http.patch(environment.blogHost + 'blog/addVote/'+ id, rating);
   }
 
-  updateRating(rating: Rating):Observable<any> {
-    return this.http.put(environment.blogHost + 'blog/votes/'+ rating.id, rating);
+  updateRating(rating: Rating, id: string, index: number):Observable<any> {
+    return this.http.patch(environment.blogHost + 'blog/updateVote/'+ id + '/' + index, rating);
   }
 
   getRatingCount(id: string): Observable<number> {

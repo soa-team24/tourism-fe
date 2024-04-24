@@ -45,10 +45,10 @@ export class BlogReviewComponent {
     });
     */
 
-    this.service.getBlogs().subscribe({
-      next: (result: PagedResults<Blog>) => {
-        this.blogs = result.results;
-        this.originalBlogs = [...result.results];
+    this.service.getBlogs1().subscribe({
+      next: (result: Blog[]) => {
+        this.blogs = result;
+        this.originalBlogs = [...result];
         this.totalPages = Math.ceil(this.blogs.length / this.itemsPerPage); 
         this.totalPageArray = Array.from({ length: this.totalPages }, (_, index) => index + 1);
         this.updateBlogRows();

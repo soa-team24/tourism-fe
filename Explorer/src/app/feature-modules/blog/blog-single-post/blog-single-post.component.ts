@@ -36,6 +36,7 @@ export class BlogSinglePostComponent implements OnInit {
   checkpoints: Checkpoint[]
   equipment: Equipment[]
   touristDistance: number=0;
+  votes: Rating[];
 
 constructor(private blogService: BlogService, private route: ActivatedRoute, private authService: AuthService, 
   private router: Router, private tourService: TourAuthoringService, private equipmentService: AdministrationService, private viewportScroller: ViewportScroller) { }
@@ -57,9 +58,9 @@ ngOnInit(): void {
           this.blogService.getSimilarBlogs(this.blogPost).subscribe((similarBlogs: Blog[]) => {
           this.similarBlogs = similarBlogs;
         });
-        this.blogService.getAllVotes(this.blogId).subscribe((votes) => {
+            this.votes = this.blogPost.votes || [];
             const userId = this.authService.user$.value.id;
-            const userVote = votes.find(vote => vote.userId === userId);
+            const userVote = this.votes.find(vote => vote.userId === userId);
             if(userVote){
               if(userVote.isUpvote == true){
                 this.upvoted = true;
@@ -67,7 +68,7 @@ ngOnInit(): void {
                 this.downvoted = true;
               }
             }
-        });
+        
         if(this.blogPost.tourReport){
           this.touristDistance = this.blogPost.tourReport.length;
           this.tourService.getCheckpointsByVisitedCheckpoints(this.blogPost.tourReport.checkpointsVisited).subscribe({
@@ -134,7 +135,6 @@ ngOnInit(): void {
           const rating: Rating = {
             isUpvote: true,
             userId: userId,
-            blogId: this.blogId,
             creationTime: new Date()
           };
 
@@ -145,11 +145,11 @@ ngOnInit(): void {
               const upvote: Rating = {
                 isUpvote: true,
                 userId: userVote.userId,
-                blogId: this.blogId,
                 creationTime: new Date(),
                 id: userVote.id
               };
-              this.blogService.updateRating(upvote).subscribe({
+              let index = votes.findIndex(vote => vote.id === userVote.id);
+              this.blogService.updateRating(upvote, this.blogId, index).subscribe({
                 next: () => {
                   this.updateRatingCount();
                   this.upvoted = true;
@@ -160,7 +160,7 @@ ngOnInit(): void {
                 }
               });
             }else if(!userVote){
-              this.blogService.addRating(rating).subscribe({
+              this.blogService.addRating(rating, this.blogId).subscribe({
                 next: () => {
                   this.updateRatingCount();
                   this.upvoted = true;
@@ -193,7 +193,6 @@ ngOnInit(): void {
           const rating: Rating = {
             isUpvote: false,
             userId: userId,
-            blogId: this.blogId,
             creationTime: new Date()
           };
 
@@ -204,11 +203,11 @@ ngOnInit(): void {
               const downvote: Rating = {
                 isUpvote: false,
                 userId: userVote.userId,
-                blogId: this.blogId,
                 creationTime: new Date(),
                 id: userVote.id
               };
-              this.blogService.updateRating(downvote).subscribe({
+              let index = votes.findIndex(vote => vote.id === userVote.id);
+              this.blogService.updateRating(downvote, this.blogId, index).subscribe({
                 next: () => {
                   this.updateRatingCount();
                   this.upvoted = false;
@@ -219,7 +218,7 @@ ngOnInit(): void {
                 }
               });
             }else if(!userVote){
-              this.blogService.addRating(rating).subscribe({
+              this.blogService.addRating(rating, this.blogId).subscribe({
                 next: () => {
                   this.updateRatingCount();
                   this.upvoted = false;
@@ -343,7 +342,7 @@ ngOnInit(): void {
   
 
   sendRating() {
-    this.blogService.addRating(this.rating).subscribe(
+    this.blogService.addRating(this.rating, this.blogId).subscribe(
       response => {
       },
       error => {

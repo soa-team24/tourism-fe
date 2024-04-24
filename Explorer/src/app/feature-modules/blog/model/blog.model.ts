@@ -1,3 +1,4 @@
+import { Rating } from "./blog-rating.model";
 import { BlogTourReport } from "./blog-tour-report";
 
 export enum BlogStatus {
@@ -35,6 +36,7 @@ export interface Blog {
     status : BlogStatus;
     image: string | "";
     category: BlogCategory;
+    votes?: Rating[];
     tourReport?: BlogTourReport; 
 }
 
