@@ -146,8 +146,14 @@ export class AdministrationService {
     return this.http.request(req);
   }
   
-  getProfiles(): Observable<PagedResults<Profile>> {
-    return this.http.get<PagedResults<Profile>>(environment.apiHost + 'administration/profile/all-profiles');
+  getProfiles(): Observable<Profile[]> {
+    //return this.http.get<PagedResults<Profile>>(environment.apiHost + 'administration/profile/all-profiles');
+    return this.http.get<Profile[]>('http://localhost:8083/profiles');
+  }
+
+  getSuggestedProfiles(profile: Profile): Observable<Profile[]> {
+    //return this.http.get<PagedResults<Profile>>(environment.apiHost + 'administration/profile/all-profiles');
+    return this.http.get<Profile[]>('http://localhost:8083/userSuggestedFollowers/' + profile.id);
   }
 
   getProfiles2(): Observable<PagedResults<Profile>> {
@@ -164,8 +170,8 @@ export class AdministrationService {
     return this.http.get<boolean>(environment.apiHost + 'administration/profile2/already-follows/' + profileId + '/' + followerId);
   }
 
-  getAllFollowers(profile: Profile): Observable<PagedResults<Profile>> {
-    return this.http.get<PagedResults<Profile>>(environment.apiHost + 'administration/profile/all-followers/' + profile.id);
+  getAllFollowers(profile: Profile): Observable<Profile[]> {
+    return this.http.get<Profile[]>('http://localhost:8083/userFollowers/' + profile.id);
   }
 
   getPublicRequests(): Observable<PagedResults<PublicRequest>> {
@@ -180,7 +186,8 @@ export class AdministrationService {
   }
 
   addFollow(follow: Follow): Observable<Follow> {
-    return this.http.put<Follow>(environment.apiHost + 'administration/profile/AddFollow', follow);
+    //return this.http.put<Follow>(environment.apiHost + 'administration/profile/AddFollow', follow);
+    return this.http.post<Follow>('http://localhost:8083/follow', follow)
   }
 
   addFollow2(follow: Follow): Observable<Follow> {

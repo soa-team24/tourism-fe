@@ -35,21 +35,19 @@ export class FollowersComponent implements OnInit {
         this.loggedInProfile = loggedInProfile;
 
         // Get all profiles
-        this.service.getProfiles().subscribe({
-          next: (result: PagedResults<Profile>) => {
-            // Filter out the currently logged-in profile
-            this.profiles = result.results.filter((profile) => profile.id !== loggedInProfile.id);
-            
+        this.service.getProfiles().subscribe(
+          (allProfiles: Profile[]) => {
+            this.profiles = allProfiles.filter((profile: Profile) => profile.id !== this.loggedInProfile?.id);
           },
-          error: (err: any) => {
-            console.log(err);
+          (error: any) => {
+            console.log(error);
           }
-        });
+        );
 
         // Get follows after getting the logged-in user's profile
-      this.service.getAllFollowers(this.loggedInProfile).subscribe({
-        next: (result: PagedResults<Profile>) => {
-          this.followers = result.results;
+      /*this.service.getAllFollowers(this.loggedInProfile).subscribe(
+         (allProfiles: Profile[]) => {
+          this.followers = allProfiles;
           console.log("FOLLOWERS");
           console.log(this.followers);
           
@@ -57,11 +55,16 @@ export class FollowersComponent implements OnInit {
             this.hasFollowers=true;
             console.log("NEMA FOLLOWERA")
           }
+       
+      });*/
+      this.service.getAllFollowers(this.loggedInProfile).subscribe(
+        (allProfiles: Profile[]) => {
+          this.followers = allProfiles.filter((profile: Profile) => profile.id !== this.loggedInProfile?.id);
         },
-        error: (err: any) => {
-          console.error('Error while getting followers:', err);
+        (error: any) => {
+          console.log(error);
         }
-      });
+      );
       },
       error: (err: any) => {
         console.log(err);

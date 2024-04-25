@@ -33,7 +33,7 @@ export class MessageComponent implements OnInit {
         this.loggedInProfile = loggedInProfile;
 
         // Get all profiles
-        this.service.getProfiles().subscribe({
+       /* this.service.getProfiles().subscribe({
           next: (result: PagedResults<Profile>) => {
             // Filter out the currently logged-in profile
             this.profiles = result.results.filter((profile) => profile.id !== loggedInProfile.id);
@@ -41,7 +41,7 @@ export class MessageComponent implements OnInit {
           error: (err: any) => {
             console.log(err);
           }
-        });
+        });*/
 
         // Get follows after getting the logged-in user's profile
       this.service.getAllUnreadMessages(this.loggedInProfile).subscribe({

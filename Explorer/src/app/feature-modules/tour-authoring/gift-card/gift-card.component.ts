@@ -122,7 +122,7 @@ export class GiftCardComponent {
 
   getFollowersForLoggedInProfile(): void {
     if (this.loggedInProfile) {
-      this.administrationService.getAllFollowers(this.loggedInProfile).subscribe({
+    /*  this.administrationService.getAllFollowers(this.loggedInProfile).subscribe({
         next: (result: PagedResults<Profile>) => {
           this.followers = result.results;
         },
@@ -130,7 +130,7 @@ export class GiftCardComponent {
           console.error('Error while getting followers:', err);
         }
       });
-    }
-  }
+    }*/
+    }}
 
 }

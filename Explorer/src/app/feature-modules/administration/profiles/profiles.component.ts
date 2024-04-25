@@ -11,7 +11,8 @@ import { Follow } from '../model/follow.model';
 })
 export class ProfilesComponent implements OnInit {
   profiles: Profile[] = [];
-  loggedInProfile: Profile | null = null; // Store the logged-in user's profile
+  suggestedProfiles: Profile[] = [];
+  loggedInProfile: Profile | undefined; // Store the logged-in user's profile
   follows: Profile[] = [];
   followedProfiles: { [key: number]: boolean } = {};
   profileFollowed="";
@@ -25,24 +26,35 @@ export class ProfilesComponent implements OnInit {
       next: (loggedInProfile: Profile) => {
         this.loggedInProfile = loggedInProfile;
 
-        // Get all profiles
-        this.service.getProfiles().subscribe({
-          next: (result: PagedResults<Profile>) => {
-            // Filter out the currently logged-in profile
-            this.profiles = result.results.filter((profile) => profile.id !== loggedInProfile.id);
+        // Get all profiles and filter out the currently logged-in profile
+        this.service.getProfiles().subscribe(
+          (allProfiles: Profile[]) => {
+            this.profiles = allProfiles.filter((profile: Profile) => profile.id !== this.loggedInProfile?.id);
           },
-          error: (err: any) => {
-            console.log(err);
+          (error: any) => {
+            console.log(error);
           }
-        });
+        );
+
+
+        this.service.getSuggestedProfiles(this.loggedInProfile).subscribe(
+          (allProfiles: Profile[]) => {
+            this.suggestedProfiles = allProfiles.filter((profile: Profile) => profile.id !== this.loggedInProfile?.id);
+          },
+          (error: any) => {
+            console.log(error);
+          }
+        );
+        
+        
       },
       error: (err: any) => {
         console.log(err);
       }
     });
-
-    
   }
+  
+  
 
 
   onFollowClicked(profile: Profile) {

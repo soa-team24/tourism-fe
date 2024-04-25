@@ -29,7 +29,7 @@ export class MessageFormComponent {
         this.loggedInProfile = loggedInProfile;
 
         // Get all profiles
-        this.service.getProfiles().subscribe({
+        /*this.service.getProfiles().subscribe({
           next: (result: PagedResults<Profile>) => {
             // Filter out the currently logged-in profile
             this.profiles = result.results.filter((profile) => profile.id !== loggedInProfile.id);
@@ -37,7 +37,7 @@ export class MessageFormComponent {
           error: (err: any) => {
             console.log(err);
           }
-        });
+        });*/
 
 
 

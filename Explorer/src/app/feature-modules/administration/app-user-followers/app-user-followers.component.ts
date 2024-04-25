@@ -37,7 +37,7 @@ export class AppUserFollowersComponent {
           this.loggedInProfile = loggedInProfile;
   
           // Get all profiles
-          this.service.getProfiles().subscribe({
+          /*this.service.getProfiles().subscribe({
             next: (result: PagedResults<Profile>) => {
               // Filter out the currently logged-in profile
               this.profiles = result.results.filter((profile) => profile.id !== loggedInProfile.id);
@@ -45,9 +45,10 @@ export class AppUserFollowersComponent {
             error: (err: any) => {
               console.log(err);
             }
-          });
+          });*/
   
           // Get follows after getting the logged-in user's profile
+          /*
         this.service.getAllFollowers(this.loggedInProfile).subscribe({
           next: (result: PagedResults<Profile>) => {
             this.followers = result.results;
@@ -61,7 +62,7 @@ export class AppUserFollowersComponent {
           error: (err: any) => {
             console.error('Error while getting followers:', err);
           }
-        });
+        });*/
         },
         error: (err: any) => {
           console.log(err);

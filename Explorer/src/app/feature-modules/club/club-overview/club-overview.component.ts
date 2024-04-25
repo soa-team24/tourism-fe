@@ -156,12 +156,12 @@ export class ClubOverviewComponent {
             }
           }
           this.nonMemberIds = this.nonMemberIds.filter(id => !this.club.memberIds.includes(id));
-          this.adminService.getProfiles().subscribe((profilesResult: PagedResults<Profile>) => {
+       /*   this.adminService.getProfiles().subscribe((profilesResult: PagedResults<Profile>) => {
             const allProfiles: Profile[] = profilesResult.results;
             this.allMembersProfiles = allProfiles.filter(profile => this.club.memberIds.includes(profile.userId as number));
             this.nonMembersProfiles = allProfiles.filter(profile => this.nonMemberIds.includes(profile.userId as number));
             
-          });
+          });*/
         });
 
         
