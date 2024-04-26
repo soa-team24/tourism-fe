@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    apiHost: 'http://localhost:8086/api/',
+    apiHost: 'https://localhost:44333/api/',
     blogHost: 'http://localhost:8080/',
     goHost: 'http://localhost:8081/'
   };

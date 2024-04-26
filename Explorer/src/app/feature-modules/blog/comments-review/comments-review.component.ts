@@ -5,6 +5,7 @@ import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { Blog } from '../model/blog.model';
 
 
 @Component({
@@ -16,10 +17,13 @@ export class CommentsReviewComponent implements OnInit {
   @Input() comments: BlogComment[] = [];
   blogId : string;
   selectedBlogComment: BlogComment | null;
+  selectedForDelete: BlogComment | null;
   shouldRenderBlogCommentForm: boolean = false;
   shouldEdit: boolean = false;
   userNames: { [key: number]: string } = {};
   currentUserId:number;
+  blog: Blog;
+  blogComments: Blog[];
   
 
   constructor(private blogService: BlogService, private route: ActivatedRoute, private authService: AuthService) { 
@@ -37,26 +41,30 @@ export class CommentsReviewComponent implements OnInit {
 
   onSaveCommentEdit(comment: BlogComment): void {
     if (this.selectedBlogComment) {
+      const updatedComment = { ...this.selectedBlogComment };
+      updatedComment.text = this.editedCommentText;
       
-      const updatedComment = { ...this.selectedBlogComment, text: this.editedCommentText };
-      
-      // Pozovite odgovarajući servis da sačuva izmene na serveru
-      this.blogService.updateBlogComment(updatedComment).subscribe((result) => {
-        if (result) {
-          // Osvežite listu komentara nakon uređivanja
-          this.comments = this.comments.map((comment) => {
-            return comment.id === updatedComment.id ? updatedComment : comment;
-          });
-
-          // Obrišite selektovani komentar nakon uređivanja
-          this.selectedBlogComment = null;
-          this.editedCommentText = '';
-        }
+      // Find the index of the selected comment in the local array
+      const index = this.comments.indexOf(this.selectedBlogComment);
+      // Call the service to update the comment on the server
+      this.blogService.updateBlogComment(updatedComment, this.blog.id!, index).subscribe(() => {
+        // Update the comment in the local array
+        this.comments[index] = updatedComment;
+    
+        // Clear the selected comment and edited text
+        this.selectedBlogComment = null;
+        this.editedCommentText = '';
+    
+        // Optionally, you might want to emit an event or perform any other actions upon successful update
       });
     }
-
-    
   }
+  
+  
+      // Call the service to save the changes on the server
+    
+
+  
 
   onCancelEdit(): void {
     this.selectedBlogComment = null;
@@ -70,6 +78,10 @@ export class CommentsReviewComponent implements OnInit {
       this.currentUserId = this.authService.user$.value.id;
       if (blogId) {
         this.getCommentsByBlogId(blogId);
+        this.blogService.getBlog(blogId).subscribe((blog: Blog) => {
+          // Once the blog is fetched, access its comments
+          this.blog = blog;
+        })
       } else {
         // Handle the case when there is no valid blog ID in the URL.
       }
@@ -81,24 +93,24 @@ export class CommentsReviewComponent implements OnInit {
  
 
   getCommentsByBlogId(blogId: string): void {
-    this.blogService.getCommentsByBlogId(blogId).subscribe({
-      next: (result: PagedResults<BlogComment>) => {
-        this.comments = result.results;
-        
-      },
-      error: () => {
-        
-      }
-
-    });
+    this.blogService.getBlog(blogId).subscribe((blog: Blog) => {
+      // Once the blog is fetched, access its comments
+      const result = blog.comments!.filter(comment => comment.text !== "");
+     // const result = blog.comments;
+    })
   }
 
-  deleteBlogComment(id: string): void {
-    this.blogService.deleteBlogComment(id).subscribe({
-      next: () => {
-        this.getBlogComment();
-      },
-    })
+  deleteBlogComment(comment: BlogComment): void {
+    if (comment) {
+      this.selectedForDelete = comment;
+      const index = this.comments.indexOf(this.selectedForDelete);
+      this.blogService.deleteBlogComment(this.blog.id!, index, comment).subscribe({
+        next: () => {
+          this.getBlogComment();
+        },
+      })
+    }
+    
   }
 
   getBlogComment(): void {
