@@ -75,7 +75,7 @@ export class BlogService {
   upload(file: File): Observable<HttpEvent<any>> {
     const formData: FormData = new FormData();
     formData.append('file', file);
-    const req = new HttpRequest('POST', 'https://localhost:44333/api/tourist/blog/UploadFile', formData,{
+    const req = new HttpRequest('POST', 'http://localhost:8086/api/tourist/blog/UploadFile', formData,{
       reportProgress: true,
       responseType: 'json'
     });

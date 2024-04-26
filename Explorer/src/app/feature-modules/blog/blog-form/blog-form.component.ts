@@ -206,7 +206,7 @@ export class BlogFormComponent {
         username: username,
         status: BlogStatus.Published,
         userId: userId,
-        image: 'https://localhost:44333/Images/' + this.currentFile.name,
+        image: 'http://localhost:8086/Images/' + this.currentFile.name,
         category:this.selectedCategory,
         tourReport: {
           tourId: this.tourExecution.tourId.valueOf(),
@@ -249,7 +249,7 @@ export class BlogFormComponent {
         creationTime: new Date(),
         username: username,
         status:  BlogStatus.Published,
-        image: 'https://localhost:44333/Images/' + this.currentFile.name,
+        image: 'http://localhost:8086/Images/' + this.currentFile.name,
         userId: userId,
         category: this.selectedCategory
     };
@@ -317,7 +317,7 @@ export class BlogFormComponent {
           creationTime: (currentBlog?.creationTime || new Date()) as Date,
           status: BlogStatus.Published,
           id: this.blogId,
-          image: 'https://localhost:44333/Images/' + this.currentFile.name,
+          image: 'http://localhost:8086/Images/' + this.currentFile.name,
           category: this.selectedCategory,
         };
         await this.service.upload(this.currentFile).subscribe({
