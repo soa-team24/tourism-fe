@@ -18,16 +18,16 @@ export class BlogService {
     return this.http.get<PagedResults<BlogComment>>(environment.blogHost + 'comment')
   }
 
-  deleteBlogComment(id: string): Observable<BlogComment> {
-    return this.http.delete<BlogComment>(environment.blogHost + 'comment/' + id);
+  deleteBlogComment(id: string, index:number, comment: BlogComment): Observable<any> {
+    return this.http.patch<any>(environment.blogHost + 'blog/deleteComment/' + id + '/' + index, comment);
   }
 
-  addBlogComment(comment: BlogComment): Observable<BlogComment> {
-    return this.http.post<BlogComment>(environment.blogHost + 'comment', comment);
+  addBlogComment(id: string,comment: BlogComment): Observable<BlogComment> {
+    return this.http.patch<BlogComment>(environment.blogHost + 'blog/addComment/'+ id, comment);
   }
 
-  updateBlogComment(comment: BlogComment): Observable<BlogComment> {
-    return this.http.put<BlogComment>(environment.blogHost + 'comment/' + comment.id, comment);
+  updateBlogComment(comment: BlogComment, id: string, index:number): Observable<BlogComment> {
+    return this.http.patch<BlogComment>(environment.blogHost + 'blog/updateComment/' + id + '/' + index, comment);
   }
 
   getBlogs1(): Observable<Blog[]> {

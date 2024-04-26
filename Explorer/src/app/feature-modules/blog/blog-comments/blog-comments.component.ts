@@ -25,13 +25,13 @@ export class BlogCommentsComponent implements OnInit {
     this.getBlogComment();
   }
   
-  deleteBlogComment(id: string): void {
+ /* deleteBlogComment(id: string): void {
     this.service.deleteBlogComment(id).subscribe({
       next: () => {
         this.getBlogComment();
       },
     })
-  }
+  }*/
 
   getBlogComment(): void {
     this.service.getBlogComment().subscribe({

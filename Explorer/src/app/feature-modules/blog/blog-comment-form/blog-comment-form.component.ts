@@ -7,6 +7,7 @@ import { Blog, BlogStatus } from '../model/blog.model';
 import { Observable } from 'rxjs';
 import { BlogFormComponent } from '../blog-form/blog-form.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -22,14 +23,27 @@ export class BlogCommentFormComponent {
   @Input() shouldEdit: boolean = false;
   @Input() blogId :  string = "";
   @Output() blogCommentAdded = new EventEmitter<BlogComment>();
+  blog: Blog;
 
   blogCommentForm = new FormGroup({
     text: new FormControl('', [Validators.required]),
   });
 
-  constructor(private service: BlogService,private authService: AuthService, private snackBar: MatSnackBar) {
+  constructor(private service: BlogService,private authService: AuthService,private route: ActivatedRoute, private snackBar: MatSnackBar) {
   }
 
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      const blogId = params.get('id');
+      if (blogId) {
+        this.blogId = blogId;
+        this.service.getBlog(this.blogId).subscribe((blog: Blog) => {
+          blog = this.blog;
+        });
+      }
+    });
+  }
+  
   ngOnChanges(): void {
     this.blogCommentForm.reset();
     if(this.shouldEdit) {
@@ -55,10 +69,9 @@ export class BlogCommentFormComponent {
               creationTime: new Date('2023-10-22T10:30:00'),
               userId: userId,
               username: username,
-              blogId: this.blogId,
               lastModification: new Date('2023-10-22T10:30:00')
             };
-            this.service.addBlogComment(blogComment).subscribe({
+            this.service.addBlogComment(this.blogId,blogComment).subscribe({
               next: () => { this.blogCommentForm.reset(); this.blogCommentUpdated.emit(blogComment); this.showNotification('Comment successfully added!'); this.blogCommentAdded.emit(blogComment);}
             });
           }
@@ -78,12 +91,13 @@ export class BlogCommentFormComponent {
       creationTime: this.blogComment.creationTime,
       userId: userId,
       username: username,
-      blogId: this.blogId,
       lastModification: new Date('2023-10-22T10:30:00')
 
     };
     blogComment.id = this.blogComment.id;
-    this.service.updateBlogComment(blogComment).subscribe({
+    const index = this.blog.comments!.indexOf(blogComment);
+
+    this.service.updateBlogComment(blogComment,this.blog.id!,index).subscribe({
       next: () => { this.blogCommentUpdated.emit(blogComment); this.showNotification('Comment successfully edited!')}
     });
   }
