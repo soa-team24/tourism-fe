@@ -48,14 +48,7 @@ export class CommentsReviewComponent implements OnInit {
       const index = this.comments.indexOf(this.selectedBlogComment);
       // Call the service to update the comment on the server
       this.blogService.updateBlogComment(updatedComment, this.blog.id!, index).subscribe(() => {
-        // Update the comment in the local array
-        this.comments[index] = updatedComment;
-    
-        // Clear the selected comment and edited text
-        this.selectedBlogComment = null;
-        this.editedCommentText = '';
-    
-        // Optionally, you might want to emit an event or perform any other actions upon successful update
+          this.getBlogComment();
       });
     }
   }
@@ -103,8 +96,7 @@ export class CommentsReviewComponent implements OnInit {
   deleteBlogComment(comment: BlogComment): void {
     if (comment) {
       this.selectedForDelete = comment;
-      const index = this.comments.indexOf(this.selectedForDelete);
-      this.blogService.deleteBlogComment(this.blog.id!, index, comment).subscribe({
+      this.blogService.deleteBlogComment(this.blog.id!, this.selectedForDelete.id!).subscribe({
         next: () => {
           this.getBlogComment();
         },
@@ -114,14 +106,17 @@ export class CommentsReviewComponent implements OnInit {
   }
 
   getBlogComment(): void {
-    this.blogService.getBlogComment().subscribe({
-      next: (result: PagedResults<BlogComment>) => {
-        this.comments = result.results;
-       
-      },
-      error: () => {
+    this.route.params.subscribe(params => {
+      const blogId = params['id'];
+      if (blogId) {
+        this.blogService.getBlog(blogId).subscribe((blog: Blog) => {
+          this.blog = blog;
+          this.comments = blog.comments!;
+        })
+      } else {
+        // Handle the case when there is no valid blog ID in the URL.
       }
-    })
+    });
   }
 
  
