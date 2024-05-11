@@ -95,7 +95,7 @@ ngOnInit(): void {
       // Fetch the blog by its ID
       this.blogService.getBlog(blogId).subscribe((blog: Blog) => {
         // Once the blog is fetched, access its comments
-        const result = blog.comments!.filter(comment => comment.text !== "");
+        const result = blog.comments;
   
         if (result && Array.isArray(result) && result.length > 0) {
           // Store comments in the component property
