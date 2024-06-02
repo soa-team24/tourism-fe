@@ -84,7 +84,7 @@ export class AuthService {
     const formData: FormData = new FormData();
     formData.append('file', file);
 
-    const req = new HttpRequest('POST', `https://localhost:44333/api/author/bundle/uploadBundleImage`, formData, {
+    const req = new HttpRequest('POST', `https://localhost:8086/api/author/bundle/uploadBundleImage`, formData, {
       reportProgress: true,
       responseType: 'json'
     });
@@ -96,11 +96,11 @@ export class AuthService {
   }
 
   createToken(token: Token, email: string): Observable<Token> {
-    return this.http.post<Token>('https://localhost:44333/api/administrator/token/' + email, token);
+    return this.http.post<Token>('https://localhost:8086/api/administrator/token/' + email, token);
   }
 
   getToken(value: string): Observable<Token> {
-    return this.http.get<Token>('https://localhost:44333/api/administrator/token/' + value);
+    return this.http.get<Token>('https://localhost:8086/api/administrator/token/' + value);
   }
 
   getAuthors(): Observable<PagedResults<User>> {

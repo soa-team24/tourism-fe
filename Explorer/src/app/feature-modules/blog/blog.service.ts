@@ -18,16 +18,16 @@ export class BlogService {
     return this.http.get<PagedResults<BlogComment>>(environment.blogHost + 'comment')
   }
 
-  deleteBlogComment(id: string): Observable<BlogComment> {
-    return this.http.delete<BlogComment>(environment.blogHost + 'comment/' + id);
+  deleteBlogComment(blogId: string, commentId: string): Observable<any> {
+    return this.http.delete<any>(environment.blogHost + 'blog/deleteComment/' + blogId + '/' + commentId);
   }
 
-  addBlogComment(comment: BlogComment): Observable<BlogComment> {
-    return this.http.post<BlogComment>(environment.blogHost + 'comment', comment);
+  addBlogComment(id: string,comment: BlogComment): Observable<BlogComment> {
+    return this.http.patch<BlogComment>(environment.blogHost + 'blog/addComment/'+ id, comment);
   }
 
-  updateBlogComment(comment: BlogComment): Observable<BlogComment> {
-    return this.http.put<BlogComment>(environment.blogHost + 'comment/' + comment.id, comment);
+  updateBlogComment(comment: BlogComment, id: string, index:number): Observable<BlogComment> {
+    return this.http.patch<BlogComment>(environment.blogHost + 'blog/updateComment/' + id + '/' + index, comment);
   }
 
   getBlogs1(): Observable<PagedResults<Blog>> {
@@ -80,7 +80,7 @@ export class BlogService {
   upload(file: File): Observable<HttpEvent<any>> {
     const formData: FormData = new FormData();
     formData.append('file', file);
-    const req = new HttpRequest('POST', 'https://localhost:44333/api/tourist/blog/UploadFile', formData,{
+    const req = new HttpRequest('POST', 'http://localhost:8086/api/tourist/blog/UploadFile', formData,{
       reportProgress: true,
       responseType: 'json'
     });

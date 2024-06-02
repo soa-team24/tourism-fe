@@ -1,3 +1,4 @@
+import { BlogComment } from "./blog-comment.model";
 import { Rating } from "./blog-rating.model";
 import { BlogTourReport } from "./blog-tour-report";
 
@@ -37,6 +38,7 @@ export interface Blog {
     image: string | "";
     category: BlogCategory;
     votes?: Rating[];
+    comments?:BlogComment[];
     tourReport?: BlogTourReport; 
 }
 

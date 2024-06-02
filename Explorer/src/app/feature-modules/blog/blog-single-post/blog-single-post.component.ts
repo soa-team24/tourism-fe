@@ -92,20 +92,18 @@ ngOnInit(): void {
   }
   async getCommentsByBlogId(blogId: string): Promise<void> {
     try {
-      const result = await this.blogService.getCommentsByBlogId(blogId).toPromise();
+      // Fetch the blog by its ID
+      this.blogService.getBlog(blogId).subscribe((blog: Blog) => {
+        // Once the blog is fetched, access its comments
+        const result = blog.comments;
   
-      if (result && Array.isArray(result) && result.length > 0) {
-  
-        
-        const firstReview = result[0];
-  
-        
-        this.comments = result;
-  
-        
-      } else {
-        console.error('Invalid response format: Tour review data is unavailable.');
-      }
+        if (result && Array.isArray(result) && result.length > 0) {
+          // Store comments in the component property
+          this.comments = result;
+        } else {
+          console.error('Invalid response format: Blog comments data is unavailable.');
+        }
+      });
     } catch (error) {
       console.error('An error occurred:', error);
     }

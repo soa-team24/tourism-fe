@@ -83,35 +83,35 @@ export class AdministrationService {
   }
   // PROFILE
   getByProfileUserId(id: number): Observable<Profile> {
-    return this.http.get<Profile>(environment.apiHost + 'administration/profile/by-id/' + id);
+    return this.http.get<Profile>('https://localhost:8086/api/administration/profile/by-id/' + id);
   }
   
   getById(message: Message): Observable<Profile> {
-    return this.http.get<Profile>(environment.apiHost + 'administration/profile/by-id/' + message.senderId);
+    return this.http.get<Profile>('https://localhost:8086/api/administration/profile/by-id/' + message.senderId);
   }
 
   getById2(message: Message): Observable<Profile> {
-    return this.http.get<Profile>(environment.apiHost + 'administration/profile2/by-id/' + message.senderId);
+    return this.http.get<Profile>('https://localhost:8086/api/administration/profile2/by-id/' + message.senderId);
   }
 
   getByUserId(): Observable<Profile> {
-    return this.http.get<Profile>(environment.apiHost + 'administration/profile/by-user');
+    return this.http.get<Profile>('https://localhost:8086/api/administration/profile/by-user');
   }
 
   getProfileByUserId(id: number): Observable<Profile> {
-    return this.http.get<Profile>(environment.apiHost + 'administration/profile/get-profile-by-user'+ id);
+    return this.http.get<Profile>('https://localhost:8086/api/administration/profile/get-profile-by-user'+ id);
   }
 
   getByUserId2(): Observable<Profile> {
-    return this.http.get<Profile>(environment.apiHost + 'administration/profile2/by-user');
+    return this.http.get<Profile>('https://localhost:8086/api/administration/profile2/by-user');
   }
   
   updateProfile(profile: Profile): Observable<Profile> {
-    return this.http.patch<Profile>(environment.apiHost + 'administration/profile/' + profile.id + '/' + profile.userId, profile);
+    return this.http.patch<Profile>('https://localhost:8086/api/administration/profile/' + profile.id + '/' + profile.userId, profile);
   }
 
   updateProfile2(profile: Profile): Observable<Profile> {
-    return this.http.patch<Profile>(environment.apiHost + 'administration/profile2/' + profile.id + '/' + profile.userId, profile)
+    return this.http.patch<Profile>('https://localhost:8086/api/administration/profile2/' + profile.id + '/' + profile.userId, profile)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           console.error('Request failed:', error);
@@ -125,7 +125,7 @@ export class AdministrationService {
 
     formData.append('file', file);
 
-    const req = new HttpRequest('POST', `https://localhost:44333/api/administration/profile/UploadFile`, formData, {
+    const req = new HttpRequest('POST', `https://localhost:8086/api/administration/profile/UploadFile`, formData, {
       reportProgress: true,
       responseType: 'json'
     });
@@ -138,7 +138,7 @@ export class AdministrationService {
 
     formData.append('file', file);
 
-    const req = new HttpRequest('POST', `https://localhost:44333/api/administration/profile2/UploadFile`, formData, {
+    const req = new HttpRequest('POST', `https://localhost:8086/api/administration/profile2/UploadFile`, formData, {
       reportProgress: true,
       responseType: 'json'
     });
@@ -175,11 +175,11 @@ export class AdministrationService {
   }
 
   getPublicRequests(): Observable<PagedResults<PublicRequest>> {
-    return this.http.get<PagedResults<PublicRequest>>(environment.apiHost + 'administrator/publicRequest');
+    return this.http.get<PagedResults<PublicRequest>>('https://localhost:8086/api/administrator/publicRequest');
   }
 
   updatePublicRequest(pr: PublicRequest): Observable<PublicRequest> {
-    return this.http.put<PublicRequest>(environment.apiHost + 'administrator/publicRequest/update/' + pr.id, pr);
+    return this.http.put<PublicRequest>('https://localhost:8086/api/administrator/publicRequest/update/' + pr.id, pr);
   }
   getAllFollowers2(profile: Profile): Observable<PagedResults<Profile>> {
     return this.http.get<PagedResults<Profile>>(environment.apiHost + 'administration/profile2/all-followers/' + profile.id);
@@ -212,24 +212,24 @@ export class AdministrationService {
   }
 
   updateMessage(message: Message): Observable<Message> {
-    return this.http.put<Message>(environment.apiHost + 'administration/message/' + message.id + '/' + message.senderId + '/' + message.receiverId, message);
+    return this.http.put<Message>('https://localhost:8086/api/administration/message/' + message.id + '/' + message.senderId + '/' + message.receiverId, message);
   }
 
   updateMessage2(message: Message): Observable<Message> {
-    return this.http.put<Message>(environment.apiHost + 'administration/message2/' + message.id + '/' + message.senderId + '/' + message.receiverId, message);
+    return this.http.put<Message>('https://localhost:8086/api/administration/message2/' + message.id + '/' + message.senderId + '/' + message.receiverId, message);
   }
 
   //WALLET
   getWalletByUserId(): Observable<Wallet> {
-    return this.http.get<Wallet>(environment.apiHost + 'administrator/wallet/byUser');
+    return this.http.get<Wallet>('https://localhost:8086/api/administrator/wallet/byUser');
   }
 
   getAllWallets(): Observable<PagedResults<Wallet>> {
-    return this.http.get<PagedResults<Wallet>>(environment.apiHost + 'administrator/wallet');
+    return this.http.get<PagedResults<Wallet>>('https://localhost:8086/api/administrator/wallet');
   }
 
   addAC(wallet: Wallet): Observable<Wallet> {
-    return this.http.put<Wallet>(environment.apiHost + 'administrator/wallet/' + wallet.id , wallet);
+    return this.http.put<Wallet>('https://localhost:8086/api/administrator/wallet/' + wallet.id , wallet);
   }
 
   /*getQuestions(): Observable<PagedResults<Question>> {
@@ -237,11 +237,11 @@ export class AdministrationService {
   }*/
 
   getQuestions(): Observable<Question[]> {
-    return this.http.get<Question[]>(environment.apiHost + `question/unanswered`);
+    return this.http.get<Question[]>(`https://localhost:8086/api/question/unanswered`);
   } 
   
   createAnswer(answer: Answer): Observable<Answer> {
-    return this.http.post<Answer>(environment.apiHost + 'answer/createAnswer', answer);
+    return this.http.post<Answer>('https://localhost:8086/api/answer/createAnswer', answer);
   
   }
 
@@ -264,11 +264,11 @@ export class AdministrationService {
 
   // USER
   getUserById(id: number): Observable<User> {
-    return this.http.get<User>(environment.apiHost + 'users/whole/' + id);
+    return this.http.get<User>('http://localhost:8086/api/users/whole/' + id);
   }
 
   updateUser(user: User): Observable<User> {
     console.log("dakle posle ovog: ", user);
-    return this.http.put<User>(environment.apiHost + 'users/updateUser/' + user.id + "/" + user.role, user);
+    return this.http.put<User>('http://localhost:8086/api/users/updateUser/' + user.id + "/" + user.role, user);
   }
 }

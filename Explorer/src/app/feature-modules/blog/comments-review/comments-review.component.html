@@ -2,7 +2,7 @@
   <div class="comment">
     <div>
       <p>{{ comment?.username }}</p>
-      <ng-container *ngIf="comment.userId === currentUserId">
+      <ng-container>
       <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More Options" class="menu-button">
         <mat-icon>more_vert</mat-icon>
       </button>
@@ -11,7 +11,7 @@
           <mat-icon>edit</mat-icon>
           <span>Edit</span>
         </button>
-        <button mat-menu-item *ngIf="comment.id !== undefined" (click)="deleteBlogComment(comment.id)">
+        <button mat-menu-item  (click)="deleteBlogComment(comment)">
           <mat-icon>delete</mat-icon>
           <span>Delete</span>
         </button>
