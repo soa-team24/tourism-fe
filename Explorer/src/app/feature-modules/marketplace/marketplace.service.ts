@@ -94,7 +94,7 @@ export class MarketplaceService {
   getOrderItemsByShoppingCart(userId: number): Observable<OrderItem[]> {
     const encodedUserId = encodeURIComponent(userId.toString());
     console.log(`Encoded User ID: ${encodedUserId}`);
-    return this.http.get<OrderItem[]>(`https://localhost:44333/api/tourist/orderItem/orderItems/${encodedUserId}`);
+    return this.http.get<OrderItem[]>(environment.apiHost + `tourist/orderItem/orderItems/${encodedUserId}`);
   }  
 
 
@@ -103,7 +103,7 @@ export class MarketplaceService {
   }
 
   removeFromCart(shoppingCartId: number, orderItemId: number): Observable<void> {
-    return this.http.put<void>('https://localhost:44333/api/tourist/shoppingCart/removeItem/'+ shoppingCartId + '/' + orderItemId, null);
+    return this.http.put<void>(environment.apiHost + 'tourist/shoppingCart/removeItem/'+ shoppingCartId + '/' + orderItemId, null);
   }
 
   updateApplicationReview(applicationReview: ApplicationReview): Observable<ApplicationReview> { 

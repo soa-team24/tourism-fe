@@ -56,11 +56,11 @@ export class ClubService {
   }
 
   getClubMessages(clubId : number): Observable<PagedResults<ClubMessage>> {
-    return this.http.get<PagedResults<ClubMessage>>('https://localhost:44333/api/club/' + clubId + '/chatroom');
+    return this.http.get<PagedResults<ClubMessage>>(environment.apiHost + 'club/' + clubId + '/chatroom');
   }
 
   addClubMessage(clubMessage: ClubMessage): Observable<ClubMessage> {
-    return this.http.post<ClubMessage>('https://localhost:44333/api/club', clubMessage);
+    return this.http.post<ClubMessage>(environment.apiHost + 'club', clubMessage);
   }
 
   getAllMembers(clubId: number): Observable<Array<number>> {

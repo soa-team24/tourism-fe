@@ -3,6 +3,8 @@ import { BlogService } from '../blog.service';
 import { Blog, BlogCategory, BlogStatus, BlogCategoryValues  } from '../model/blog.model';
 import { Router } from '@angular/router';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
+import { AuthService } from 'src/app/infrastructure/auth/auth.service';
+import { User } from 'src/app/infrastructure/auth/model/user.model';
 
 
 @Component({
@@ -12,6 +14,7 @@ import { PagedResults } from 'src/app/shared/model/paged-results.model';
 })
 export class BlogReviewComponent {
   blogs: Blog[] = [];
+  filteredBlogs: Blog[] = [];
   blogRows: any[] = [];
   itemsPerPage = 12;
   currentPage = 1; 
@@ -19,11 +22,17 @@ export class BlogReviewComponent {
   totalPageArray: number[] = [];
   BlogCategory: BlogCategory;
   originalBlogs: Blog[] = [];
+  userId = this.authService.user$.value.id;
+  user: User;
 
-  constructor(private service: BlogService, private router: Router) {}
+  constructor(private service: BlogService, private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.getBlogs();
+
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+    });
   }
 
 
@@ -46,12 +55,30 @@ export class BlogReviewComponent {
     */
 
     this.service.getBlogs1().subscribe({
-      next: (result: Blog[]) => {
-        this.blogs = result;
-        this.originalBlogs = [...result];
-        this.totalPages = Math.ceil(this.blogs.length / this.itemsPerPage); 
+      next: (response) => {
+        
+        this.filteredBlogs = response.results;
+        this.originalBlogs = [...response.results];
+        this.totalPages = Math.ceil(this.filteredBlogs.length / this.itemsPerPage); 
         this.totalPageArray = Array.from({ length: this.totalPages }, (_, index) => index + 1);
-        this.updateBlogRows();
+        
+
+        for (let i = 0; i < this.filteredBlogs.length; i++) {
+
+          this.service.checkIfFollowing(this.userId, this.filteredBlogs[i].userId).subscribe({
+            next: (response) => {
+              const answer = response;
+              if (answer.boolField) {
+                this.blogs.push(this.filteredBlogs[i]);
+                this.updateBlogRows();
+              }
+            },
+            error: () => { 
+            }
+          });
+          
+        }
+        
       },
       error: () => {
         

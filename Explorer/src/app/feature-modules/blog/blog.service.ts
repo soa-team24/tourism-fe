@@ -30,17 +30,22 @@ export class BlogService {
     return this.http.put<BlogComment>(environment.blogHost + 'comment/' + comment.id, comment);
   }
 
-  getBlogs1(): Observable<Blog[]> {
-    return this.http.get<Blog[]>(environment.blogHost + 'blog')
+  getBlogs1(): Observable<PagedResults<Blog>> {
+    return this.http.get<PagedResults<Blog>>(environment.blogHost + 'api/tourist/blog')  //
   }
   getBlogs(): Observable<PagedResults<Blog>> {
-    return this.http.get<PagedResults<Blog>>(environment.blogHost + 'blog')
+    return this.http.get<PagedResults<Blog>>(environment.blogHost + 'api/tourist/blog')  ///
   }
 
   getBlogsByStatus(status: BlogStatus): Observable<PagedResults<Blog>> {
     return this.http.get<PagedResults<Blog>>(environment.blogHost + 'blog/byStatus/' + status)
   }
 
+  
+  checkIfFollowing(followsId: number, userId: number): Observable<any> {
+    const url = 'http://localhost:8083/checkIfFollows/' + followsId + '/' + userId;
+    return this.http.get<any>(url);
+  }
   
 
   deleteBlog(id: string): Observable<Blog> {
@@ -52,7 +57,7 @@ export class BlogService {
   }
 
   addBlog(blog: Blog): Observable<Blog> {
-    return this.http.post<Blog>(environment.blogHost + 'blog', blog);
+    return this.http.post<Blog>(environment.blogHost + 'api/tourist/blog', blog);  ///
   }
 
   updateBlog(blog: Blog): Observable<Blog> {
